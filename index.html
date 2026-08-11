@@ -1090,7 +1090,10 @@
                     try {
                         const uploadForm = new FormData();
                         uploadForm.append('file', value, value.name);
-                        const resp = await fetch(`${API_BASE}/upload`, { method: 'POST', body: uploadForm });
+                        const headers = {};
+                        const token = getVisitorAuthToken();
+                        if (token) headers.Authorization = `Bearer ${token}`;
+                        const resp = await fetch(`${API_BASE}/upload`, { method: 'POST', headers, body: uploadForm });
                         if (resp.ok) {
                             const info = await resp.json();
                             data[key] = { name: value.name, type: value.type, size: value.size, path: info.path, url: info.url };
