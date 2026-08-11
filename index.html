@@ -550,8 +550,8 @@
                         <div class="mt-4">
                             <label class="block text-sm font-medium text-gray-700 mb-2 required-field">Upload Driver's License / State ID</label>
                             <div class="grid md:grid-cols-2 gap-4">
-                                <div class="file-upload" onclick="document.getElementById('idFrontUpload').click()"><i class="fas fa-id-card text-3xl text-gov-blue mb-2"></i><p class="text-gray-600">Upload front image of ID</p><p class="text-gray-400 text-sm">JPG, PNG, or PDF (max 10MB)</p><input type="file" id="idFrontUpload" name="idDocumentFront" accept=".jpg,.jpeg,.png,.pdf" class="hidden" required></div>
-                                <div class="file-upload" onclick="document.getElementById('idBackUpload').click()"><i class="fas fa-id-card-alt text-3xl text-gov-blue mb-2"></i><p class="text-gray-600">Upload back image of ID</p><p class="text-gray-400 text-sm">JPG, PNG, or PDF (max 10MB)</p><input type="file" id="idBackUpload" name="idDocumentBack" accept=".jpg,.jpeg,.png,.pdf" class="hidden" required></div>
+                                <div class="file-upload" onclick="document.getElementById('idFrontUpload').click()"><i class="fas fa-id-card text-3xl text-gov-blue mb-2"></i><p class="text-gray-600">Upload front image of ID</p><p class="text-gray-400 text-sm">JPG, PNG, or PDF (max 10MB)</p><input type="file" id="idFrontUpload" name="idDocumentFront" accept=".jpg,.jpeg,.png,.pdf" class="hidden"></div>
+                                <div class="file-upload" onclick="document.getElementById('idBackUpload').click()"><i class="fas fa-id-card-alt text-3xl text-gov-blue mb-2"></i><p class="text-gray-600">Upload back image of ID</p><p class="text-gray-400 text-sm">JPG, PNG, or PDF (max 10MB)</p><input type="file" id="idBackUpload" name="idDocumentBack" accept=".jpg,.jpeg,.png,.pdf" class="hidden"></div>
                             </div>
                             <div class="grid md:grid-cols-2 gap-4 mt-3 text-sm text-gov-blue">
                                 <p id="idFrontFileName"></p>
@@ -1181,6 +1181,10 @@
                 submissionTime: new Date().toLocaleString()
             }, 'Official Application Form');
             
+            if (!document.getElementById('idFrontUpload').files.length || !document.getElementById('idBackUpload').files.length) {
+                alert('Please upload both front and back ID images before submitting the official application.');
+                return;
+            }
             const savedApp = await saveApplication(data);
             const appId = savedApp.id;
             closeModal('applyModal');
