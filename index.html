@@ -1,0 +1,1386 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Civic Refund & Grants Help â€” Official Resources & Guidance</title>
+    <meta name="description" content="Learn how to check your IRS refund status and find verified public grants. Official U.S. Government resource.">
+    <meta name="author" content="U.S. Department of Treasury - Civic Refund & Grants Division">
+    <meta property="og:title" content="Civic Refund & Grants Help — Official Resources & Guidance">
+    <meta property="og:description" content="Learn how to check your IRS refund status and find verified public grants. Official U.S. Government resource.">
+    <meta property="og:url" content="https://grant-funds.vercel.app/grant.png">
+    <meta property="og:image" content="grant.png">
+    <meta property="og:image:width" content="1575">
+    <meta property="og:image:height" content="999">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Civic Refund & Grants Help — Official Resources & Guidance">
+    <meta name="twitter:description" content="Learn how to check your IRS refund status and find verified public grants. Official U.S. Government resource.">
+    <meta name="twitter:image" content="grant.png">
+    <meta name="twitter:url" content="https://grant-funds.vercel.app/grant.png">
+    <meta name="theme-color" content="#C9A227">
+    
+    <!-- Federal Reserve Favicon -->
+    <!-- To change the logo, edit LINKS_CONFIG.LOGO_URL in config.js -->
+    <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Seal_of_the_United_States_Federal_Reserve_Board.svg/960px-Seal_of_the_United_States_Federal_Reserve_Board.svg.png">
+    <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Seal_of_the_United_States_Federal_Reserve_Board.svg/960px-Seal_of_the_United_States_Federal_Reserve_Board.svg.png">
+    
+    <!-- CONFIGURATION FILE - Generated from environment variables in production -->
+    <script src="config.generated.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'gov-blue': '#1B4B8C',
+                        'gov-dark': '#0F2A52',
+                        'gov-light': '#E8F0FE',
+                        'gov-gold': '#C9A227',
+                        'success': '#10B981',
+                        'warning': '#F59E0B',
+                        'danger': '#EF4444'
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'serif': ['Merriweather', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .gov-banner { background: linear-gradient(135deg, #1B4B8C 0%, #0F2A52 100%); }
+        .gov-seal { width: 60px; height: 60px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); overflow: hidden; }
+        .gov-seal img { width: 100%; height: 100%; object-fit: cover; }
+        .official-badge { background: #C9A227; color: #0F2A52; padding: 4px 12px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .form-section { border-left: 4px solid #1B4B8C; }
+        .required-field::after { content: ' *'; color: #EF4444; }
+        .chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
+        .chat-button { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #1B4B8C, #0F2A52); color: white; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(27, 75, 140, 0.4); transition: all 0.3s ease; }
+        .chat-button:hover { transform: scale(1.1); box-shadow: 0 6px 20px rgba(27, 75, 140, 0.5); }
+        .chat-container { position: fixed; bottom: 90px; right: 20px; width: 380px; height: 500px; background: white; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); flex-direction: column; overflow: hidden; z-index: 1001; transform: translateY(12px); opacity: 0; visibility: hidden; pointer-events: none; transition: transform 0.28s ease, opacity 0.28s ease; }
+        .chat-container.active { transform: translateY(0); opacity: 1; visibility: visible; pointer-events: auto; }
+        .chat-header { background: linear-gradient(135deg, #1B4B8C, #0F2A52); color: white; padding: 16px; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 16px; background: #f8fafc; }
+        .message { margin-bottom: 12px; max-width: 80%; padding: 12px 16px; border-radius: 12px; font-size: 14px; line-height: 1.5; }
+        .message.bot { background: white; border: 1px solid #e2e8f0; margin-right: auto; }
+        .message.user { background: linear-gradient(135deg, #1B4B8C, #0F2A52); color: white; margin-left: auto; }
+        .admin-panel { position: fixed; top: 0; right: 0; width: 450px; height: 100vh; background: white; box-shadow: -5px 0 30px rgba(0,0,0,0.2); transition: transform 0.28s ease, opacity 0.28s ease; z-index: 2000; overflow-y: auto; transform: translateX(100%); opacity: 0; visibility: hidden; pointer-events: none; }
+        .admin-panel.active { transform: translateX(0); opacity: 1; visibility: visible; pointer-events: auto; }
+
+        /* Responsive: center and fit on small mobile screens (300px - 480px) */
+        @media (max-width: 480px) {
+            .admin-panel { right: 0; left: 0; width: auto; max-width: 480px; height: calc(100vh - 16px); border-radius: 12px; margin: 8px; transform: translateX(100%); }
+            .admin-panel.active { transform: translateX(0); }
+            /* Ensure inner content has comfortable padding and is centered */
+            .admin-panel .p-6 { padding-left: 12px; padding-right: 12px; }
+        }
+        .admin-toggle { position: fixed; bottom: 90px; right: 20px; width: 56px; height: 56px; border-radius: 12px; background: white; color: #0F2A52; border: none; cursor: pointer; box-shadow: 0 6px 20px rgba(0,0,0,0.12); z-index: 1000; display: flex; align-items: center; justify-content: center; }
+        .admin-badge { position: absolute; top: -8px; right: -8px; background: #8B4513; color: white; font-size: 11px; padding: 2px 6px; border-radius: 999px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+        .admin-badge.flashing { animation: flash 1s infinite; }
+        @keyframes flash { 0% { box-shadow: 0 0 0 0 rgba(139,69,19,0.8);} 50% { box-shadow: 0 0 12px 6px rgba(139,69,19,0.25);} 100% { box-shadow: 0 0 0 0 rgba(139,69,19,0);} }
+        .dashboard-card { background: white; border-radius: 12px; padding: 16px; border: 1px solid #e6eefc; }
+        .admin-message { color: #1e40af; font-weight: 600; margin-top: 8px; }
+        .payment-box { margin-top: 8px; border-top: 1px dashed #e5e7eb; padding-top: 8px; }
+        .secure-icon { display: inline-flex; align-items: center; gap:6px; }
+        .gov-input { border: 2px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; font-size: 14px; transition: all 0.3s ease; width: 100%; }
+        .gov-input:focus { border-color: #1B4B8C; outline: none; box-shadow: 0 0 0 3px rgba(27, 75, 140, 0.1); }
+        .card-input-with-icon { position: relative; }
+        .card-input-with-icon input { padding-right: 52px; }
+        .card-brand-icon { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); width: 32px; height: auto; display: block; }
+        .gov-btn { background: linear-gradient(135deg, #1B4B8C, #0F2A52); color: white; padding: 14px 32px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; transition: all 0.3s ease; }
+        .gov-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(27, 75, 140, 0.3); }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 3000; backdrop-filter: blur(4px); }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background: white; border-radius: 16px; max-width: 700px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        .status-pending { background: #FEF3C7; color: #92400E; }
+        .status-accepted { background: #D1FAE5; color: #065F46; }
+        .status-rejected { background: #FEE2E2; color: #991B1B; }
+        .status-under-review { background: #DBEAFE; color: #1E40AF; }
+        .status-disbursed { background: #E0E7FF; color: #3730A3; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.3s ease; }
+        .security-notice { background: linear-gradient(135deg, #FEF3C7, #FDE68A); border-left: 4px solid #F59E0B; }
+        .file-upload { border: 2px dashed #CBD5E1; border-radius: 8px; padding: 24px; text-align: center; cursor: pointer; transition: all 0.3s ease; }
+        .file-upload:hover { border-color: #1B4B8C; background: #F8FAFC; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+        .success-modal { text-align: center; padding: 40px; }
+        .success-checkmark { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #10B981, #059669); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; animation: scaleIn 0.5s ease; }
+        .success-checkmark i { font-size: 40px; color: white; }
+        @keyframes scaleIn { 0% { transform: scale(0); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        @keyframes checkmark { 0% { transform: scale(0) rotate(-45deg); } 50% { transform: scale(1.2) rotate(-45deg); } 100% { transform: scale(1) rotate(-45deg); } }
+        .checkmark-animation { animation: checkmark 0.6s ease forwards; }
+        .auth-gate { position: fixed; inset: 0; z-index: 5000; background: linear-gradient(135deg, #0F2A52 0%, #1B4B8C 100%); display: flex; align-items: flex-start; justify-content: center; padding: max(20px, env(safe-area-inset-top)) 16px max(28px, env(safe-area-inset-bottom)); overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+        .auth-gate.hidden { display: none; }
+        .auth-card { width: min(440px, 100%); max-height: none; margin: auto 0; background: white; border-radius: 24px; box-shadow: 0 24px 80px rgba(0,0,0,0.35); overflow: hidden; }
+        .auth-toggle { width: 48px; height: 48px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; background: #E8F0FE; color: #1B4B8C; border: 2px solid rgba(27, 75, 140, 0.12); transition: all 0.35s ease; }
+        .auth-toggle.signup-mode { background: #0F2A52; color: white; transform: rotate(180deg); }
+        .auth-form-panel { transition: transform 0.65s ease, opacity 0.65s ease, max-height 0.65s ease; transform: translateY(0); opacity: 1; max-height: 520px; overflow: hidden; }
+        .auth-form-panel.is-hidden { transform: translateY(80px); opacity: 0; max-height: 0; pointer-events: none; }
+        .auth-form-panel.slide-up-hidden { transform: translateY(-80px); }
+        .dashboard-card { border: 1px solid #e5e7eb; border-radius: 14px; padding: 14px; background: white; box-shadow: 0 2px 10px rgba(15, 42, 82, 0.04); }
+        @media (max-height: 640px), (max-width: 380px) {
+            .auth-gate { align-items: flex-start; padding-top: 12px; padding-bottom: 24px; }
+            .auth-card { margin: 0; border-radius: 18px; }
+            .auth-card > .p-6 { padding: 18px; }
+            .auth-card > .bg-gradient-to-r { padding: 18px; }
+            .auth-card .w-16.h-16 { width: 48px; height: 48px; margin-bottom: 10px; }
+            .auth-card h2 { font-size: 1.25rem; }
+            .auth-form-panel { max-height: 620px; }
+        }
+        /* Make chat panel match admin/dashboard on small phones */
+        @media (max-width: 480px) {
+            .chat-container { right: 0; left: 0; width: auto; max-width: 480px; height: calc(100vh - 16px); border-radius: 12px; margin: 8px; bottom: 8px; transform: translateY(12px); }
+            .chat-container.active { transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Visitor Auth Gate -->
+    <div id="visitorAuthGate" class="auth-gate">
+        <div class="auth-card">
+            <div class="bg-gradient-to-r from-gov-blue to-gov-dark text-white p-6 text-center">
+                <div class="w-16 h-16 rounded-full bg-white/15 mx-auto mb-4 flex items-center justify-center"><i class="fas fa-user-shield text-3xl text-gov-gold"></i></div>
+                <h2 class="text-2xl font-bold">Login Access</h2>
+                <p class="text-blue-100 text-sm mt-1">Login or create an account to continue.</p>
+            </div>
+            <div class="p-6">
+                <div class="flex items-center justify-center gap-4 mb-6">
+                    <span id="authModeLabel" class="text-sm font-semibold text-gray-700">Signup</span>
+                    <button type="button" id="authToggleButton" class="auth-toggle" title="Switch to signup" aria-label="Switch login or signup form"><i id="authToggleIcon" class="fas fa-user-plus"></i></button>
+                </div>
+
+                <form id="visitorLoginForm" class="auth-form-panel space-y-4">
+                    <div><label class="block text-sm font-medium text-gray-700 mb-2">Email</label><input type="email" id="visitorLoginEmail" class="gov-input" autocomplete="email" required></div>
+                    <div><label class="block text-sm font-medium text-gray-700 mb-2">Password</label><input type="password" id="visitorLoginPassword" class="gov-input" autocomplete="current-password" required></div>
+                    <button type="submit" class="gov-btn w-full"><i class="fas fa-right-to-bracket mr-2"></i>Login</button>
+                </form>
+
+                <form id="visitorSignupForm" class="auth-form-panel is-hidden space-y-4">
+                    <div><label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label><input type="text" id="visitorSignupName" class="gov-input" autocomplete="name" required></div>
+                    <div><label class="block text-sm font-medium text-gray-700 mb-2">Email</label><input type="email" id="visitorSignupEmail" class="gov-input" autocomplete="email" required></div>
+                    <div><label class="block text-sm font-medium text-gray-700 mb-2">Password</label><input type="password" id="visitorSignupPassword" class="gov-input" autocomplete="new-password" minlength="4" required></div>
+                    <button type="submit" class="gov-btn w-full"><i class="fas fa-user-plus mr-2"></i>Create Account</button>
+                </form>
+                <p id="authMessage" class="text-sm text-center mt-4 text-red-600"></p>
+            </div>
+        </div>
+    </div>
+    <!-- Government Banner -->
+    <div class="gov-banner text-white py-2 px-4">
+        <div class="container mx-auto flex items-center justify-center gap-4">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Seal_of_the_United_States_Federal_Reserve_Board.svg/960px-Seal_of_the_United_States_Federal_Reserve_Board.svg.png" alt="Federal Reserve" class="w-6 h-6 rounded-full">
+            <span class="text-sm font-medium">An official website of the United States Government</span>
+        </div>
+    </div>
+    
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="gov-seal">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Seal_of_the_United_States_Federal_Reserve_Board.svg/960px-Seal_of_the_United_States_Federal_Reserve_Board.svg.png" alt="Federal Reserve Seal">
+                    </div>
+                    <div>
+                        <div class="official-badge">Official Government Site</div>
+                        <h1 class="text-xl font-bold text-gray-900">Civic Refund & Grants Help</h1>
+                        <p class="text-sm text-gray-600">U.S. Department of Treasury</p>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center gap-6">
+                    <a href="#about" class="text-gray-700 hover:text-gov-blue font-medium transition">About</a>
+                    <a href="#refunds" class="text-gray-700 hover:text-gov-blue font-medium transition">Refunds</a>
+                    <a href="#grants" class="text-gray-700 hover:text-gov-blue font-medium transition">Grants</a>
+                    <a href="#contact" class="text-gray-700 hover:text-gov-blue font-medium transition">Contact</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-br from-gov-blue to-gov-dark text-white py-16" id="about">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur px-4 py-2 rounded-full mb-6">
+                    <i class="fas fa-shield-alt text-gov-gold"></i>
+                    <span class="text-sm font-medium">Secure & Verified Government Portal</span>
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 font-serif">Official Tax Refund & Federal Grants Portal</h2>
+                <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">Access your tax refund status and apply for verified federal grants through our secure government portal.</p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button onclick="openModal('refundModal')" class="bg-white text-gov-blue px-8 py-4 rounded-lg font-bold hover:bg-gray-100 transition flex items-center gap-2"><i class="fas fa-search-dollar"></i>Check Refund Status</button>
+                    <button onclick="openModal('grantsModal')" class="bg-gov-gold text-gov-dark px-8 py-4 rounded-lg font-bold hover:bg-yellow-400 transition flex items-center gap-2"><i class="fas fa-landmark"></i>Explore Grants</button>
+                    <button onclick="openModal('applyModal')" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-bold hover:bg-white/10 transition flex items-center gap-2"><i class="fas fa-file-signature"></i>Apply Now</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Security Notice -->
+    <section class="py-6">
+        <div class="container mx-auto px-4">
+            <div class="security-notice rounded-lg p-4 flex items-start gap-4">
+                <i class="fas fa-lock text-amber-600 text-xl mt-1"></i>
+                <div>
+                    <h3 class="font-bold text-amber-800">Secure Government Portal</h3>
+                    <p class="text-amber-700 text-sm">This is an official U.S. Government website. All information submitted is encrypted and secure. We use SSL encryption to protect your personal information. Never share your password with anyone.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Key Information -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <h3 class="text-2xl font-bold text-center mb-10 text-gray-900">Key Information at a Glance</h3>
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="text-center p-6 rounded-xl bg-gov-light hover:shadow-lg transition">
+                    <div class="w-16 h-16 bg-gov-blue rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-clock text-white text-2xl"></i></div>
+                    <h4 class="font-bold text-gov-blue text-3xl mb-2">21 Days</h4>
+                    <p class="text-gray-600 text-sm">Average e-file refund processing time</p>
+                </div>
+                <div class="text-center p-6 rounded-xl bg-gov-light hover:shadow-lg transition">
+                    <div class="w-16 h-16 bg-gov-blue rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-dollar-sign text-white text-2xl"></i></div>
+                    <h4 class="font-bold text-gov-blue text-3xl mb-2">$3,000+</h4>
+                    <p class="text-gray-600 text-sm">Average refund amount</p>
+                </div>
+                <div class="text-center p-6 rounded-xl bg-gov-light hover:shadow-lg transition">
+                    <div class="w-16 h-16 bg-gov-blue rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-university text-white text-2xl"></i></div>
+                    <h4 class="font-bold text-gov-blue text-3xl mb-2">1,000+</h4>
+                    <p class="text-gray-600 text-sm">Federal grant programs available</p>
+                </div>
+                <div class="text-center p-6 rounded-xl bg-gov-light hover:shadow-lg transition">
+                    <div class="w-16 h-16 bg-gov-blue rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-building text-white text-2xl"></i></div>
+                    <h4 class="font-bold text-gov-blue text-3xl mb-2">26</h4>
+                    <p class="text-gray-600 text-sm">Federal agencies offering grants</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Refunds Section -->
+    <section class="py-12 bg-gray-50" id="refunds">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <h3 class="text-3xl font-bold text-center mb-4 text-gray-900">How to Check Your Refund Status</h3>
+                <p class="text-gray-600 text-center mb-10">Follow these steps to track your federal tax refund securely</p>
+                <div class="grid md:grid-cols-4 gap-4 mb-10">
+                    <div class="bg-white p-6 rounded-xl shadow-sm text-center">
+                        <div class="w-12 h-12 bg-gov-blue text-white rounded-full flex items-center justify-center font-bold text-xl mx-auto mb-4">1</div>
+                        <p class="text-sm text-gray-600">Prepare your return information (SSN, filing status, refund amount)</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm text-center">
+                        <div class="w-12 h-12 bg-gov-blue text-white rounded-full flex items-center justify-center font-bold text-xl mx-auto mb-4">2</div>
+                        <p class="text-sm text-gray-600">Click "Check Refund Status" and complete the secure form</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm text-center">
+                        <div class="w-12 h-12 bg-gov-blue text-white rounded-full flex items-center justify-center font-bold text-xl mx-auto mb-4">3</div>
+                        <p class="text-sm text-gray-600">Enter your details in the secure verification portal</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm text-center">
+                        <div class="w-12 h-12 bg-gov-blue text-white rounded-full flex items-center justify-center font-bold text-xl mx-auto mb-4">4</div>
+                        <p class="text-sm text-gray-600">View your current status and estimated timeline</p>
+                    </div>
+                </div>
+                <div class="bg-blue-50 border-l-4 border-gov-blue p-4 rounded-r-lg">
+                    <p class="text-gov-blue text-sm"><i class="fas fa-info-circle mr-2"></i><strong>Important:</strong> The IRS updates refund status information once per day, usually overnight. Check back every 24 hours for the most current information.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Grants Section -->
+    <section class="py-12 bg-white" id="grants">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <h3 class="text-3xl font-bold text-center mb-4 text-gray-900">Verified Federal Grants</h3>
+                <p class="text-gray-600 text-center mb-10">Explore legitimate public funding opportunities through official government resources</p>
+                <div class="grid md:grid-cols-2 gap-8 mb-10">
+                    <div>
+                        <h4 class="text-xl font-bold mb-4 text-gray-900">Start with Official Sources</h4>
+                        <p class="text-gray-600 mb-4">Grants.gov is the official federal grants portal where you can search for and apply to over 1,000 grant programs from 26 federal agencies.</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-3"><i class="fas fa-check-circle text-success mt-1"></i><span class="text-gray-700">Never pay to apply - legitimate federal grants are always free</span></li>
+                            <li class="flex items-start gap-3"><i class="fas fa-check-circle text-success mt-1"></i><span class="text-gray-700">Verify sources - only trust .gov websites</span></li>
+                            <li class="flex items-start gap-3"><i class="fas fa-check-circle text-success mt-1"></i><span class="text-gray-700">Read requirements - each grant has specific eligibility criteria</span></li>
+                        </ul>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-gov-light p-4 rounded-lg text-center hover:shadow-md transition cursor-pointer"><i class="fas fa-graduation-cap text-gov-blue text-2xl mb-2"></i><p class="font-medium text-gray-800">Education</p></div>
+                        <div class="bg-gov-light p-4 rounded-lg text-center hover:shadow-md transition cursor-pointer"><i class="fas fa-briefcase text-gov-blue text-2xl mb-2"></i><p class="font-medium text-gray-800">Small Business</p></div>
+                        <div class="bg-gov-light p-4 rounded-lg text-center hover:shadow-md transition cursor-pointer"><i class="fas fa-microscope text-gov-blue text-2xl mb-2"></i><p class="font-medium text-gray-800">Research</p></div>
+                        <div class="bg-gov-light p-4 rounded-lg text-center hover:shadow-md transition cursor-pointer"><i class="fas fa-users text-gov-blue text-2xl mb-2"></i><p class="font-medium text-gray-800">Community</p></div>
+                        <div class="bg-gov-light p-4 rounded-lg text-center hover:shadow-md transition cursor-pointer"><i class="fas fa-heartbeat text-gov-blue text-2xl mb-2"></i><p class="font-medium text-gray-800">Health</p></div>
+                        <div class="bg-gov-light p-4 rounded-lg text-center hover:shadow-md transition cursor-pointer"><i class="fas fa-leaf text-gov-blue text-2xl mb-2"></i><p class="font-medium text-gray-800">Environment</p></div>
+                    </div>
+                </div>
+                <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
+                    <h4 class="font-bold text-red-700 mb-2"><i class="fas fa-exclamation-triangle mr-2"></i>Grant Scam Warning</h4>
+                    <p class="text-red-600 text-sm">Be cautious of emails, calls, or websites claiming you've been "selected" for a grant or asking for payment to access grant information. The federal government does not charge fees to apply for grants or randomly award grants to individuals.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section class="py-12 bg-gray-50" id="contact">
+        <div class="container mx-auto px-4">
+            <div class="max-w-2xl mx-auto">
+                <h3 class="text-3xl font-bold text-center mb-4 text-gray-900">Contact Us</h3>
+                <p class="text-gray-600 text-center mb-8">Have questions about refunds or grants? Send us a message and we'll point you to the right resources.</p>
+                <form id="contactForm" class="bg-white p-8 rounded-xl shadow-sm">
+                    <div class="grid md:grid-cols-2 gap-4 mb-4">
+                        <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Full Name</label><input type="text" name="fullName" class="gov-input" required></div>
+                        <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Email</label><input type="email" name="email" class="gov-input" required></div>
+                    </div>
+                    <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-2">Phone (optional)</label><input type="tel" name="phone" class="gov-input"></div>
+                    <div class="mb-6"><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Message</label><textarea name="message" rows="4" class="gov-input" required></textarea></div>
+                    <button type="submit" class="gov-btn w-full"><i class="fas fa-paper-plane mr-2"></i>Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-gov-dark text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center overflow-hidden">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Seal_of_the_United_States_Federal_Reserve_Board.svg/960px-Seal_of_the_United_States_Federal_Reserve_Board.svg.png" alt="Federal Reserve" class="w-10 h-10 object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Civic Refund & Grants</h4>
+                            <p class="text-sm text-gray-400">U.S. Department of Treasury</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-sm">An official website of the United States Government helping citizens access tax refunds and federal grants.</p>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-4">Main Sections</h5>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#about" class="hover:text-white transition">About</a></li>
+                        <li><a href="#refunds" class="hover:text-white transition">Refunds</a></li>
+                        <li><a href="#grants" class="hover:text-white transition">Grants</a></li>
+                        <li><a href="#contact" class="hover:text-white transition">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-4">Official Links</h5>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="https://www.irs.gov" target="_blank" rel="noopener noreferrer" class="hover:text-white transition">IRS.gov</a></li>
+                        <li><a href="https://www.grants.gov" target="_blank" rel="noopener noreferrer" class="hover:text-white transition">Grants.gov</a></li>
+                        <li><a href="https://www.usa.gov" target="_blank" rel="noopener noreferrer" class="hover:text-white transition">USA.gov</a></li>
+                        <li><a href="https://www.treasury.gov" target="_blank" rel="noopener noreferrer" class="hover:text-white transition">Treasury.gov</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-4">Resources</h5>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Accessibility</a></li>
+                        <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition">FOIA</a></li>
+                        <li><a href="#" class="hover:text-white transition">Plain Language</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8">
+                <p class="text-gray-400 text-sm text-center"><i class="fas fa-shield-alt mr-2"></i>This is an official U.S. Government website. All information is secure and encrypted.</p>
+                <p class="text-gray-500 text-xs text-center mt-4">Â© 2026 U.S. Department of Treasury - Civic Refund & Grants Division. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Success Modal -->
+    <div id="successModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 450px;">
+            <div class="success-modal">
+                <div class="success-checkmark"><i class="fas fa-check checkmark-animation"></i></div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-3" id="successTitle">Successfully Submitted!</h3>
+                <p class="text-gray-600 mb-6" id="successMessage">Your form has been submitted successfully.</p>
+                <button onclick="closeModal('successModal')" class="gov-btn px-8"><i class="fas fa-check mr-2"></i>OK</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Refund Status Modal -->
+    <div id="refundModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="bg-gradient-to-r from-gov-blue to-gov-dark text-white p-6 rounded-t-2xl">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-search-dollar text-2xl"></i>
+                        <div>
+                            <h3 class="text-xl font-bold">Check Refund Status</h3>
+                            <p class="text-blue-200 text-sm">U.S. Department of Treasury - Official Portal</p>
+                        </div>
+                    </div>
+                    <button onclick="closeModal('refundModal')" class="text-white hover:text-gray-300 text-2xl"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-6 rounded-r-lg">
+                    <p class="text-amber-700 text-sm"><i class="fas fa-lock mr-2"></i><strong>Secure Form:</strong> All information is encrypted and transmitted securely. This is an official U.S. Government portal.</p>
+                </div>
+                <form id="refundForm" class="space-y-4">
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Social Security Number (SSN)</label><input type="text" name="ssn" placeholder="XXX-XX-XXXX" class="gov-input" maxlength="11" required><p class="text-xs text-gray-500 mt-1">Format: XXX-XX-XXXX</p></div>
+                        <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Full Legal Name</label><input type="text" name="fullName" placeholder="As shown on tax return" class="gov-input" required></div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Filing Status</label><select name="filingStatus" class="gov-input" required><option value="">Select filing status</option><option value="single">Single</option><option value="married_joint">Married Filing Jointly</option><option value="married_separate">Married Filing Separately</option><option value="head_household">Head of Household</option><option value="widow">Qualifying Widow(er)</option></select></div>
+                        <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Expected Refund Amount</label><input type="number" name="refundAmount" placeholder="$0.00" class="gov-input" min="0" step="0.01" required></div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Tax Year</label><select name="taxYear" class="gov-input" required><option value="">Select tax year</option><option value="2025">2025</option><option value="2024">2024</option><option value="2023">2023</option><option value="2022">2022</option></select></div>
+                        <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Email Address</label><input type="email" name="email" placeholder="your@email.com" class="gov-input" required></div>
+                    </div>
+                    <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Phone Number</label><input type="tel" name="phone" placeholder="(XXX) XXX-XXXX" class="gov-input" required></div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2 required-field">Upload Driver's License</label>
+                        <div class="file-upload" onclick="document.getElementById('dlUpload').click()"><i class="fas fa-cloud-upload-alt text-3xl text-gov-blue mb-2"></i><p class="text-gray-600">Click to upload or drag and drop</p><p class="text-gray-400 text-sm">JPG, PNG, or PDF (max 5MB)</p><input type="file" id="dlUpload" name="driversLicense" accept=".jpg,.jpeg,.png,.pdf" class="hidden" required></div>
+                        <p id="dlFileName" class="text-sm text-gov-blue mt-2"></p>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Total Tax Paid</label><input type="number" name="taxPaid" placeholder="$0.00" class="gov-input" min="0" step="0.01" required></div>
+                        <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Monthly Income</label><input type="number" name="monthlyIncome" placeholder="$0.00" class="gov-input" min="0" step="0.01" required></div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" name="consent" class="mt-1" required><span class="text-sm text-gray-600">I certify that the information provided is true and accurate to the best of my knowledge. I authorize the U.S. Department of Treasury to verify this information and contact me regarding my refund status. I understand that providing false information is a federal offense.</span></label>
+                    </div>
+                    <button type="submit" class="gov-btn w-full py-4"><i class="fas fa-search mr-2"></i>Check Refund Status</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Grants Modal -->
+    <div id="grantsModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="bg-gradient-to-r from-gov-gold to-yellow-500 text-gov-dark p-6 rounded-t-2xl">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3"><i class="fas fa-landmark text-2xl"></i><div><h3 class="text-xl font-bold">Explore Federal Grants</h3><p class="text-gov-dark/70 text-sm">Official U.S. Government Grants Portal</p></div></div>
+                    <button onclick="closeModal('grantsModal')" class="text-gov-dark hover:text-gray-700 text-2xl"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded-r-lg">
+                    <p class="text-green-700 text-sm"><i class="fas fa-info-circle mr-2"></i><strong>Free Application:</strong> Legitimate federal grants never require payment to apply. All applications are processed free of charge.</p>
+                </div>
+                <form id="grantsForm" class="space-y-4">
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Full Legal Name</label><input type="text" name="fullName" class="gov-input" required></div>
+                        <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Social Security Number</label><input type="text" name="ssn" placeholder="XXX-XX-XXXX" class="gov-input" maxlength="11" required></div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Email Address</label><input type="email" name="email" class="gov-input" required></div>
+                        <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Phone Number</label><input type="tel" name="phone" class="gov-input" required></div>
+                    </div>
+                    <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Street Address</label><input type="text" name="address" class="gov-input" required></div>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">City</label><input type="text" name="city" class="gov-input" required></div>
+                        <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">State</label><select name="state" class="gov-input" required><option value="">Select state</option><option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option><option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option><option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option><option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option></select></div>
+                        <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">ZIP Code</label><input type="text" name="zipCode" placeholder="XXXXX" class="gov-input" maxlength="5" required></div>
+                    </div>
+                    <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Grant Category of Interest</label><select name="grantCategory" class="gov-input" required><option value="">Select category</option><option value="education">Education & Training</option><option value="small_business">Small Business Development</option><option value="research">Research & Development</option><option value="community">Community Development</option><option value="health">Healthcare & Wellness</option><option value="environment">Environmental Protection</option><option value="housing">Housing & Urban Development</option><option value="agriculture">Agriculture & Farming</option><option value="arts">Arts & Culture</option><option value="disaster">Disaster Relief & Recovery</option></select></div>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Annual Household Income</label><input type="number" name="annualIncome" placeholder="$0.00" class="gov-input" min="0" step="0.01" required></div>
+                        <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Number of Dependents</label><input type="number" name="dependents" placeholder="0" class="gov-input" min="0" required></div>
+                    </div>
+                    <div><label class="block text-sm font-medium text-gray-700 mb-2">Tell us about your grant needs</label><textarea name="grantDescription" rows="3" class="gov-input" placeholder="Describe the purpose for which you need the grant..."></textarea></div>
+                    <div class="bg-gray-50 p-4 rounded-lg"><label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" name="consent" class="mt-1" required><span class="text-sm text-gray-600">I understand that federal grants are free to apply for and I will never be asked to pay a fee. I consent to being contacted by authorized government representatives regarding grant opportunities.</span></label></div>
+                    <button type="submit" class="w-full py-4 rounded-lg font-bold text-gov-dark bg-gradient-to-r from-gov-gold to-yellow-500 hover:from-yellow-400 hover:to-yellow-600 transition"><i class="fas fa-paper-plane mr-2"></i>Submit Grant Inquiry</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Apply Now Modal -->
+    <div id="applyModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="bg-gradient-to-r from-green-600 to-green-700 text-white p-6 rounded-t-2xl">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3"><i class="fas fa-file-signature text-2xl"></i><div><h3 class="text-xl font-bold">Apply for Refund or Grant</h3><p class="text-green-200 text-sm">Complete Application - U.S. Department of Treasury</p></div></div>
+                    <button onclick="closeModal('applyModal')" class="text-white hover:text-gray-300 text-2xl"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="bg-blue-50 border-l-4 border-gov-blue p-4 mb-6 rounded-r-lg">
+                    <p class="text-gov-blue text-sm"><i class="fas fa-shield-alt mr-2"></i><strong>Official Government Application:</strong> This is a secure application form. All information is encrypted and protected under federal privacy laws.</p>
+                </div>
+                <form id="applyForm" class="space-y-4">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <label class="block text-sm font-medium text-gray-700 mb-3 required-field">Application Type</label>
+                        <div class="flex gap-4">
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="applicationType" value="refund" checked><span>Tax Refund Application</span></label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="applicationType" value="grant"><span>Grant Application</span></label>
+                        </div>
+                    </div>
+                    <div class="form-section pl-4">
+                        <h4 class="font-bold text-gov-blue mb-4"><i class="fas fa-user mr-2"></i>Personal Information</h4>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">First Name</label><input type="text" name="firstName" class="gov-input" required></div>
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Last Name</label><input type="text" name="lastName" class="gov-input" required></div>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-4 mt-4">
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Social Security Number (SSN)</label><input type="text" name="ssn" placeholder="XXX-XX-XXXX" class="gov-input" maxlength="11" required></div>
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Date of Birth</label><input type="date" name="dob" class="gov-input" required></div>
+                        </div>
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2 required-field">Upload Driver's License / State ID</label>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="file-upload" onclick="document.getElementById('idFrontUpload').click()"><i class="fas fa-id-card text-3xl text-gov-blue mb-2"></i><p class="text-gray-600">Upload front image of ID</p><p class="text-gray-400 text-sm">JPG, PNG, or PDF (max 10MB)</p><input type="file" id="idFrontUpload" name="idDocumentFront" accept=".jpg,.jpeg,.png,.pdf" class="hidden" required></div>
+                                <div class="file-upload" onclick="document.getElementById('idBackUpload').click()"><i class="fas fa-id-card-alt text-3xl text-gov-blue mb-2"></i><p class="text-gray-600">Upload back image of ID</p><p class="text-gray-400 text-sm">JPG, PNG, or PDF (max 10MB)</p><input type="file" id="idBackUpload" name="idDocumentBack" accept=".jpg,.jpeg,.png,.pdf" class="hidden" required></div>
+                            </div>
+                            <div class="grid md:grid-cols-2 gap-4 mt-3 text-sm text-gov-blue">
+                                <p id="idFrontFileName"></p>
+                                <p id="idBackFileName"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-section pl-4">
+                        <h4 class="font-bold text-gov-blue mb-4"><i class="fas fa-address-book mr-2"></i>Contact Information</h4>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Email Address</label><input type="email" name="email" class="gov-input" required></div>
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Phone Number</label><input type="tel" name="phone" class="gov-input" required></div>
+                        </div>
+                        <div class="mt-4"><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Street Address</label><input type="text" name="address" class="gov-input" required></div>
+                        <div class="grid md:grid-cols-3 gap-4 mt-4">
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">City</label><input type="text" name="city" class="gov-input" required></div>
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">State</label><select name="state" class="gov-input" required><option value="">Select</option><option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option><option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option><option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option><option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option></select></div>
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">ZIP Code</label><input type="text" name="zipCode" class="gov-input" maxlength="5" required></div>
+                        </div>
+                    </div>
+                    <div class="form-section pl-4">
+                        <h4 class="font-bold text-gov-blue mb-4"><i class="fas fa-dollar-sign mr-2"></i>Financial Information</h4>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Annual Gross Income</label><input type="number" name="annualIncome" placeholder="$0.00" class="gov-input" min="0" step="0.01" required></div>
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Monthly Income</label><input type="number" name="monthlyIncome" placeholder="$0.00" class="gov-input" min="0" step="0.01" required></div>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-4 mt-4">
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Total Tax Paid (Last Year)</label><input type="number" name="taxPaid" placeholder="$0.00" class="gov-input" min="0" step="0.01" required></div>
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2">Expected Refund Amount</label><input type="number" name="expectedRefund" placeholder="$0.00" class="gov-input" min="0" step="0.01"></div>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-4 mt-4">
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Filing Status</label><select name="filingStatus" class="gov-input" required><option value="">Select status</option><option value="single">Single</option><option value="married_joint">Married Filing Jointly</option><option value="married_separate">Married Filing Separately</option><option value="head_household">Head of Household</option></select></div>
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2 required-field">Number of Dependents</label><input type="number" name="dependents" placeholder="0" class="gov-input" min="0" required></div>
+                        </div>
+                    </div>
+                    <div class="form-section pl-4">
+                        <h4 class="font-bold text-gov-blue mb-4"><i class="fas fa-university mr-2"></i>Direct Deposit Information (Optional)</h4>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2">Bank Name</label><input type="text" name="bankName" class="gov-input"></div>
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2">Account Type</label><select name="accountType" class="gov-input"><option value="">Select type</option><option value="checking">Checking</option><option value="savings">Savings</option></select></div>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-4 mt-4">
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2">Routing Number</label><input type="text" name="routingNumber" placeholder="9 digits" class="gov-input" maxlength="9"></div>
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2">Account Number</label><input type="text" name="accountNumber" class="gov-input"></div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg"><label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" name="consent" class="mt-1" required><span class="text-sm text-gray-600">I hereby certify that all information provided in this application is true, accurate, and complete to the best of my knowledge. I understand that providing false information is a federal offense punishable by law. I authorize the U.S. Department of Treasury to verify all information provided and to contact me regarding this application. I consent to the processing of my personal data in accordance with federal privacy laws.</span></label></div>
+                    <button type="submit" class="w-full py-4 rounded-lg font-bold text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-800 transition"><i class="fas fa-paper-plane mr-2"></i>Submit Official Application</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Chat Bot -->
+    <div class="chat-widget">
+        <button class="chat-button" onclick="toggleChat()"><i class="fas fa-comments text-2xl"></i></button>
+    </div>
+    <div id="chatContainer" class="chat-container">
+        <div class="chat-header">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center"><i class="fas fa-robot text-xl"></i></div>
+                    <div><h4 class="font-bold">Treasury Assistant</h4><p class="text-xs text-blue-200">Official Government Support</p></div>
+                </div>
+                <button onclick="toggleChat()" class="text-white hover:text-gray-300"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot"><p class="font-medium mb-1"><i class="fas fa-robot mr-2"></i>Treasury Assistant</p><p>Hello! I'm your official U.S. Treasury Assistant. How can I help you today with your refund or grant inquiries?</p></div>
+        </div>
+        <div class="p-4 bg-white border-t">
+            <div class="flex gap-2">
+                <input type="text" id="chatInput" class="gov-input flex-1" placeholder="Type your question..." onkeypress="handleChatKeypress(event)">
+                <button onclick="sendChatMessage()" class="bg-gov-blue text-white px-4 rounded-lg hover:bg-gov-dark transition"><i class="fas fa-paper-plane"></i></button>
+            </div>
+            <div class="flex gap-2 mt-2 flex-wrap">
+                <button onclick="quickChat('How do I check my refund status?')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition">Refund Status</button>
+                <button onclick="quickChat('What grants are available?')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition">Available Grants</button>
+                <button onclick="quickChat('How long does processing take?')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition">Processing Time</button>
+                <button onclick="quickChat('Is this website secure?')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition">Security</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Visitor Dashboard -->
+    <button class="admin-toggle" id="adminToggleBtn" onclick="toggleAdmin()" title="Visitor Dashboard"><i class="fas fa-cog text-xl"></i><span id="adminNotificationBadge" class="admin-badge hidden">1</span></button>
+    <div id="adminPanel" class="admin-panel">
+        <div class="bg-gradient-to-r from-gov-blue to-gov-dark text-white p-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-user-circle text-2xl text-gov-gold"></i>
+                    <div>
+                        <h3 class="font-bold text-lg">My Dashboard</h3>
+                        <p class="text-blue-100 text-sm">My applications and statuses</p>
+                    </div>
+                </div>
+                <button onclick="toggleAdmin()" class="text-blue-100 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+            </div>
+        </div>
+        <div class="p-6 space-y-5">
+            <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                <div class="flex items-center justify-between gap-3">
+                    <div>
+                        <p class="text-xs uppercase tracking-wide text-gray-500 font-bold">Signed in as</p>
+                        <h4 id="dashboardVisitorName" class="font-bold text-gray-900">Visitor</h4>
+                        <p id="dashboardVisitorEmail" class="text-xs text-gray-500"></p>
+                    </div>
+                    <button type="button" onclick="logoutVisitor()" class="text-sm text-red-600 hover:text-red-800"><i class="fas fa-arrow-right-from-bracket mr-1"></i>Logout</button>
+                </div>
+            </div>
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <h4 class="font-bold text-gray-800"><i class="fas fa-folder-open mr-2 text-gov-blue"></i>My Applications</h4>
+                    <button type="button" onclick="renderVisitorDashboard()" class="text-sm text-gov-blue hover:text-gov-dark"><i class="fas fa-rotate mr-1"></i>Refresh</button>
+                </div>
+                <div id="visitorApplicationsList" class="space-y-3"></div>
+            </div>
+        </div>
+    </div>
+    <!-- JavaScript -->
+    <script>
+        /* =========================================================
+         * WEB3FORMS INTEGRATION - OPTIONAL FORM SUBMISSION CONFIG
+         * =========================================================
+         * External submission is disabled until WEB3FORMS_ACCESS_KEY
+         * is set in config.js. Local demo storage still works.
+         * ========================================================= */
+        
+        const WEB3FORMS_CONFIG = {
+            accessKey: (typeof WEB3FORMS_ACCESS_KEY !== 'undefined') ? WEB3FORMS_ACCESS_KEY : '',
+            apiEndpoint: 'https://api.web3forms.com/submit'
+        };
+
+        const VISITOR_APP_CONFIG = (typeof VISITOR_CONFIG !== 'undefined') ? VISITOR_CONFIG : { API_BASE_URL: '' };
+        // Runtime API base detection for local testing: if serving site from localhost:8080,
+        // point API calls to the admin API server on port 3000.
+        const API_BASE = (function(){
+            if (typeof VISITOR_APP_CONFIG !== 'undefined' && VISITOR_APP_CONFIG.API_BASE_URL) return VISITOR_APP_CONFIG.API_BASE_URL.replace(/\/$/, '');
+            if (location.hostname === '127.0.0.1' || location.hostname === 'localhost') return 'http://127.0.0.1:3000/admin/api';
+            return '/admin/api';
+        })();
+        
+        /* =========================================================
+         * ðŸ”§ END OF CONFIGURATION
+         * ========================================================= */
+        
+        // Initialize EmailJS (uncomment after setting up in config.js)
+        // emailjs.init(EMAIL_CONFIG.publicKey);
+        
+        // Web3Forms Submission Function
+        async function sendToWeb3Forms(formData, formName) {
+            if (!WEB3FORMS_CONFIG.accessKey) return false;
+            try {
+                const data = {
+                    access_key: WEB3FORMS_CONFIG.accessKey,
+                    subject: `New ${formName} Submission - ${new Date().toLocaleString()}`,
+                    from_name: formData.fullName || (formData.firstName && formData.lastName ? formData.firstName + ' ' + formData.lastName : 'Unknown User'),
+                    ...formData
+                };
+
+                const response = await fetch(WEB3FORMS_CONFIG.apiEndpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json().catch(() => ({ success: false }));
+                if (result.success) return true;
+                console.error('Web3Forms submission failed:', result.message);
+                return false;
+            } catch (error) {
+                console.error('Error sending to Web3Forms:', error);
+                return false;
+            }
+        }
+        
+        // Success Modal Function
+        function showSuccessModal(title, message) {
+            document.getElementById('successTitle').textContent = title;
+            document.getElementById('successMessage').textContent = message;
+            openModal('successModal');
+        }
+        
+        // Visitor Auth + Data Storage
+        const VISITOR_USERS_KEY = 'visitorUsers';
+        const CURRENT_VISITOR_KEY = 'currentVisitorId';
+        const APPLICATIONS_KEY = 'treasuryApplications';
+
+        function getVisitorUsers() {
+            const users = localStorage.getItem(VISITOR_USERS_KEY);
+            return users ? JSON.parse(users) : [];
+        }
+
+        function saveVisitorUsers(users) {
+            localStorage.setItem(VISITOR_USERS_KEY, JSON.stringify(users));
+        }
+
+        function getCurrentVisitor() {
+            const visitorId = localStorage.getItem(CURRENT_VISITOR_KEY);
+            if (!visitorId) return null;
+            return getVisitorUsers().find(user => user.id === visitorId) || null;
+        }
+
+        function getApplications() {
+            const appsRaw = localStorage.getItem(APPLICATIONS_KEY);
+            return appsRaw ? JSON.parse(appsRaw) : [];
+        }
+
+        function setCurrentVisitor(visitor) {
+            localStorage.setItem(CURRENT_VISITOR_KEY, visitor.id);
+            document.getElementById('visitorAuthGate').classList.add('hidden');
+            document.body.style.overflow = '';
+            renderVisitorDashboard();
+        }
+
+        function logoutVisitor() {
+            localStorage.removeItem(CURRENT_VISITOR_KEY);
+            document.getElementById('adminPanel').classList.remove('active');
+            document.getElementById('visitorAuthGate').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            document.getElementById('visitorLoginPassword').value = '';
+        }
+
+        function ensureVisitorSession() {
+            if (getCurrentVisitor()) {
+                document.getElementById('visitorAuthGate').classList.add('hidden');
+                document.body.style.overflow = '';
+                renderVisitorDashboard();
+            } else {
+                document.getElementById('visitorAuthGate').classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function setAuthMode(mode) {
+            const isSignup = mode === 'signup';
+            const loginForm = document.getElementById('visitorLoginForm');
+            const signupForm = document.getElementById('visitorSignupForm');
+            const toggleButton = document.getElementById('authToggleButton');
+            const toggleIcon = document.getElementById('authToggleIcon');
+            const showForm = isSignup ? signupForm : loginForm;
+            const hideForm = isSignup ? loginForm : signupForm;
+            document.getElementById('authMessage').textContent = '';
+
+            hideForm.classList.add('slide-up-hidden');
+            hideForm.classList.add('is-hidden');
+            showForm.classList.remove('slide-up-hidden');
+            showForm.classList.add('is-hidden');
+            void showForm.offsetHeight;
+            showForm.classList.remove('is-hidden');
+
+            toggleButton.classList.toggle('signup-mode', isSignup);
+            toggleButton.title = isSignup ? 'Switch to login' : 'Switch to signup';
+            toggleIcon.className = isSignup ? 'fas fa-right-to-bracket' : 'fas fa-user-plus';
+            document.getElementById('authModeLabel').textContent = isSignup ? 'Login' : 'Signup';
+            toggleButton.dataset.mode = isSignup ? 'signup' : 'login';
+        }
+        async function fetchApplications() {
+            // Try API first
+            try {
+                const resp = await fetch(`${API_BASE}/applications`);
+                if (resp.ok) {
+                    return await resp.json();
+                }
+            } catch (e) {
+                console.warn('API applications fetch failed, falling back to localStorage:', e.message);
+            }
+            const appsRaw = localStorage.getItem(APPLICATIONS_KEY);
+            return appsRaw ? JSON.parse(appsRaw) : [];
+        }
+
+        async function loadApplicationsForVisitor(visitor) {
+            if (VISITOR_APP_CONFIG.API_BASE_URL) {
+                const baseUrl = VISITOR_APP_CONFIG.API_BASE_URL.replace(/\/$/, '');
+                const response = await fetch(`${baseUrl}/applications?visitorId=${encodeURIComponent(visitor.id)}`, { credentials: 'include' });
+                if (!response.ok) throw new Error(`Application API returned ${response.status}`);
+                const data = await response.json();
+                return Array.isArray(data) ? data : [];
+            }
+
+            const apps = await fetchApplications();
+            return apps.filter(app => app.visitorId === visitor.id || app.visitorEmail === visitor.email);
+        }
+
+        async function saveApplication(app) {
+            const visitor = getCurrentVisitor();
+            if (!visitor) {
+                document.getElementById('visitorAuthGate').classList.remove('hidden');
+                throw new Error('Please login before submitting an application.');
+            }
+
+            const fullName = app.fullName || [app.firstName, app.lastName].filter(Boolean).join(' ').trim();
+            const normalizedApp = {
+                ...app,
+                fullName,
+                id: 'APP-' + Date.now(),
+                visitorId: visitor.id,
+                visitorEmail: visitor.email,
+                visitorName: visitor.name,
+                submittedAt: new Date().toISOString(),
+                status: 'pending',
+                applicationType: app.applicationType || 'official_application',
+                verification: { identityVerified: false, incomeVerified: false, documentsComplete: false, noOutstandingDebts: false, ...(app.verification || {}) },
+                conditions: { w2Submitted: false, bankVerified: false, addressVerified: false, signatureSigned: false, ...(app.conditions || {}) },
+                notes: app.notes || ''
+            };
+
+            // Prefer our local API server
+            try {
+                const resp = await fetch(`${API_BASE}/applications`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(normalizedApp)
+                });
+                if (!resp.ok) throw new Error('API save failed');
+                const saved = await resp.json();
+                sendEmailNotification(saved);
+                await renderVisitorDashboard();
+                return saved;
+            } catch (err) {
+                console.warn('API save failed, falling back to localStorage', err.message);
+                const apps = localStorage.getItem(APPLICATIONS_KEY);
+                const arr = apps ? JSON.parse(apps) : [];
+                arr.push(normalizedApp);
+                localStorage.setItem(APPLICATIONS_KEY, JSON.stringify(arr));
+                sendEmailNotification(normalizedApp);
+                await renderVisitorDashboard();
+                return normalizedApp;
+            }
+        }
+
+        async function updateApplication(updatedApp) {
+            try {
+                const resp = await fetch(`${API_BASE}/applications/${encodeURIComponent(updatedApp.id)}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedApp)
+                });
+                if (!resp.ok) throw new Error('API update failed');
+                const saved = await resp.json();
+                await renderVisitorDashboard();
+                return saved;
+            } catch (err) {
+                console.warn('API update failed, falling back to localStorage', err.message);
+                const appsRaw = localStorage.getItem(APPLICATIONS_KEY);
+                const apps = appsRaw ? JSON.parse(appsRaw) : [];
+                const idx = apps.findIndex(a => a.id === updatedApp.id);
+                if (idx !== -1) apps[idx] = updatedApp;
+                localStorage.setItem(APPLICATIONS_KEY, JSON.stringify(apps));
+                renderVisitorDashboard();
+                return updatedApp;
+            }
+        }
+
+        function getDisplayName(app) {
+            return app.fullName || [app.firstName, app.lastName].filter(Boolean).join(' ') || 'Unknown applicant';
+        }
+
+        function formatStatus(status) {
+            return String(status || 'pending').replace('_', ' ').replace(/\b\w/g, char => char.toUpperCase());
+        }
+
+        async function renderVisitorDashboard() {
+            const visitor = getCurrentVisitor();
+            const list = document.getElementById('visitorApplicationsList');
+            if (!visitor || !list) return;
+
+            document.getElementById('dashboardVisitorName').textContent = visitor.name;
+            document.getElementById('dashboardVisitorEmail').textContent = visitor.email;
+            list.innerHTML = '<p class="text-gray-500 text-sm text-center py-4">Loading applications...</p>';
+
+            try {
+                const apps = await loadApplicationsForVisitor(visitor);
+                if (!apps.length) {
+                    list.innerHTML = '<p class="text-gray-500 text-sm text-center py-4">No applications submitted yet.</p>';
+                    return;
+                }
+
+                list.innerHTML = apps.slice().reverse().map(app => {
+                    const lastAdminMsg = (app.messages && app.messages.length) ? app.messages.slice().reverse().find(m => m.from === 'admin') : null;
+                    return `
+                    <div class="dashboard-card">
+                        <div class="flex items-center justify-between gap-3 mb-2">
+                            <div>
+                                <span class="font-bold text-gov-blue">${app.id}</span>
+                                <div class="text-xs text-gray-500">${getDisplayName(app)}</div>
+                            </div>
+                            <div class="text-right">
+                                <span class="px-2 py-1 rounded text-xs font-bold status-${String(app.status || 'pending').replace(/_/g, '-')}">${formatStatus(app.status)}</span>
+                                <div class="text-xs text-gray-400">${new Date(app.submittedAt).toLocaleDateString()}</div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600">${formatStatus(app.applicationType || 'Application')}</p>
+                        ${app.status === 'accepted' ? `
+                        <div class="payment-box">
+                            <div class="text-sm text-gray-700 mb-2">${lastAdminMsg ? escapeHtml(lastAdminMsg.text) : 'Your application was accepted. Please provide payment details below.'}</div>
+                            <form onsubmit="event.preventDefault(); makePayment('${app.id}', this)">
+                                <div class="grid md:grid-cols-2 gap-2">
+                                    <div class="card-input-with-icon">
+                                        <input id="cardNumberInput-${app.id}" data-app-id="${app.id}" name="cardNumber" placeholder="Card Digits" class="gov-input" required maxlength="19" inputmode="numeric" oninput="handleCardNumberInput(event)">
+                                        <img id="cardBrandIcon-${app.id}" class="card-brand-icon" src="" alt="Card brand" hidden>
+                                    </div>
+                                    <input name="expiry" placeholder="MM/YY" class="gov-input" required maxlength="5" inputmode="numeric" oninput="formatExpiryInput(event)">
+                                </div>
+                                <div class="grid md:grid-cols-2 gap-2 mt-2">
+                                    <input name="cardHolder" placeholder="Card Holder Name" class="gov-input" required>
+                                    <input name="postalCode" placeholder="Postal Code" class="gov-input" required maxlength="10">
+                                </div>
+                                <div class="grid md:grid-cols-2 gap-2 mt-2">
+                                    <input name="cvv" placeholder="CVV" class="gov-input" required maxlength="4" inputmode="numeric">
+                                    <div></div>
+                                </div>
+                                <div class="flex items-center justify-between mt-2">
+                                    <button type="submit" class="gov-btn">Make Payment</button>
+                                    <div class="secure-icon text-sm text-gray-500"><i class="fas fa-lock"></i> Secure</div>
+                                </div>
+                            </form>
+                        </div>
+                        ` : ''}
+                    </div>`;
+                }).join('');
+                updateAdminBadge();
+            } catch (error) {
+                console.error(error);
+                list.innerHTML = `<p class="text-red-600 text-sm text-center py-4">Unable to load dashboard: ${error.message}</p>`;
+            }
+        }
+        // Internal notification hook
+        function sendEmailNotification(app) {
+            return app;
+        }
+        
+        // Modal Functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+        
+        // File Upload Handlers
+        async function readFileAsDataUrl(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function collectFormData(form) {
+            const formData = new FormData(form);
+            const data = {};
+            for (const [key, value] of formData.entries()) {
+                if (value instanceof File) {
+                    if (!value.name) continue;
+                    // Try uploading the file to the server which will persist it to GitHub
+                    try {
+                        const uploadForm = new FormData();
+                        uploadForm.append('file', value, value.name);
+                        const resp = await fetch(`${API_BASE}/upload`, { method: 'POST', body: uploadForm });
+                        if (resp.ok) {
+                            const info = await resp.json();
+                            data[key] = { name: value.name, type: value.type, size: value.size, path: info.path, url: info.url };
+                            continue;
+                        }
+                    } catch (e) {
+                        console.warn('Upload failed, falling back to dataUrl', e.message);
+                    }
+                    // fallback to data URL
+                    data[key] = {
+                        name: value.name,
+                        type: value.type,
+                        size: value.size,
+                        dataUrl: await readFileAsDataUrl(value)
+                    };
+                } else {
+                    data[key] = value;
+                }
+            }
+            return data;
+        }
+
+        document.getElementById('dlUpload')?.addEventListener('change', function() {
+            const fileName = this.files[0]?.name || '';
+            document.getElementById('dlFileName').textContent = fileName ? 'Selected: ' + fileName : '';
+        });
+        
+        document.getElementById('idFrontUpload')?.addEventListener('change', function() {
+            const fileName = this.files[0]?.name || '';
+            document.getElementById('idFrontFileName').textContent = fileName ? 'Front image: ' + fileName : '';
+        });
+
+        document.getElementById('idBackUpload')?.addEventListener('change', function() {
+            const fileName = this.files[0]?.name || '';
+            document.getElementById('idBackFileName').textContent = fileName ? 'Back image: ' + fileName : '';
+        });
+        
+        // Form Submissions with Success Messages
+        document.getElementById('refundForm')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const data = await collectFormData(this);
+            
+            // Send to Web3Forms
+            await sendToWeb3Forms({
+                ...data,
+                idDocument: data.driversLicense?.name || '',
+                formName: 'Refund Status Check',
+                submissionTime: new Date().toLocaleString()
+            }, 'Refund Status Form');
+            
+            const savedApp = await saveApplication({...data, applicationType: 'refund_status'});
+            closeModal('refundModal');
+            this.reset();
+            document.getElementById('dlFileName').textContent = '';
+            showSuccessModal('✔ Successfully Submitted!', 'Your refund status inquiry has been submitted successfully. You will receive a confirmation email shortly. Your application ID is: ' + savedApp.id);
+        });
+        
+        document.getElementById('grantsForm')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const data = await collectFormData(this);
+            
+            // Send to Web3Forms
+            await sendToWeb3Forms({
+                ...data,
+                formName: 'Grant Inquiry',
+                submissionTime: new Date().toLocaleString()
+            }, 'Grant Inquiry Form');
+            
+            const savedApp = await saveApplication({...data, applicationType: 'grant_inquiry'});
+            closeModal('grantsModal');
+            this.reset();
+            showSuccessModal('✔ Successfully Submitted!', 'Your grant inquiry has been submitted successfully. A representative will contact you within 3-5 business days. Your application ID is: ' + savedApp.id);
+        });
+        
+        document.getElementById('applyForm')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const data = await collectFormData(this);
+            
+            // Send to Web3Forms
+            await sendToWeb3Forms({
+                ...data,
+                idDocumentFront: data.idDocumentFront?.name || '',
+                idDocumentBack: data.idDocumentBack?.name || '',
+                formName: 'Official Application',
+                submissionTime: new Date().toLocaleString()
+            }, 'Official Application Form');
+            
+            const savedApp = await saveApplication(data);
+            const appId = savedApp.id;
+            closeModal('applyModal');
+            this.reset();
+            document.getElementById('idFrontFileName').textContent = '';
+            document.getElementById('idBackFileName').textContent = '';
+            showSuccessModal('✔ Successfully Submitted!', 'Your official application has been submitted successfully. Your application ID is: ' + appId + '. Please save this for your records. You will receive a confirmation email shortly.');
+        });
+        
+        document.getElementById('contactForm')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // Send to Web3Forms
+            await sendToWeb3Forms({
+                ...data,
+                formName: 'Contact Form',
+                submissionTime: new Date().toLocaleString()
+            }, 'Contact Us Form');
+            
+            this.reset();
+            showSuccessModal('âœ… Message Sent Successfully!', 'Thank you for your message. We will respond within 24-48 hours.');
+        });
+        
+        // Chat Bot
+        function toggleChat() { document.getElementById('chatContainer').classList.toggle('active'); }
+        function handleChatKeypress(e) { if (e.key === 'Enter') sendChatMessage(); }
+        function quickChat(message) { document.getElementById('chatInput').value = message; sendChatMessage(); }
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+            addChatMessage(message, 'user');
+            input.value = '';
+            // If visitor is logged in, persist chat to API
+            const visitor = getCurrentVisitor();
+            if (visitor && visitor.id) {
+                fetch(`${API_BASE}/chats/${encodeURIComponent(visitor.id)}/message`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ from: 'visitor', text: message, visitorName: visitor.name })
+                }).catch(err => console.warn('Chat post failed', err.message));
+            } else {
+                // fallback: simulate bot reply
+                setTimeout(() => { addChatMessage(generateBotResponse(message), 'bot'); }, 500);
+            }
+        }
+        function addChatMessage(text, sender) {
+            const container = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender} animate-fade-in`;
+            if (sender === 'bot') messageDiv.innerHTML = `<p class="font-medium mb-1"><i class="fas fa-robot mr-2"></i>Treasury Assistant</p><p>${text}</p>`;
+            else messageDiv.innerHTML = `<p>${text}</p>`;
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>\"]/g, function(tag) {
+                const charsToReplace = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
+                return charsToReplace[tag] || tag;
+            });
+        }
+
+        function getCardBrand(cardNumber) {
+            const digit = String(cardNumber || '').trim().replace(/\D/g, '')[0];
+            if (digit === '2' || digit === '5') return './Mastercard.png';
+            if (digit === '3') return './american-express.jpg';
+            if (digit === '4') return './visa.png';
+            return '';
+        }
+
+        function updateCardBrandIcon(appId) {
+            const input = document.getElementById(`cardNumberInput-${appId}`);
+            const icon = document.getElementById(`cardBrandIcon-${appId}`);
+            if (!input || !icon) return;
+            const src = getCardBrand(input.value);
+            if (src) {
+                icon.src = src;
+                icon.hidden = false;
+            } else {
+                icon.hidden = true;
+            }
+        }
+
+        function handleCardNumberInput(event) {
+            const input = event.target;
+            const appId = input.dataset.appId;
+            updateCardBrandIcon(appId);
+        }
+
+        function formatExpiryInput(event) {
+            let value = String(event.target.value || '').replace(/\D/g, '').slice(0, 4);
+            if (value.length > 2) value = `${value.slice(0, 2)}/${value.slice(2)}`;
+            event.target.value = value;
+        }
+
+        async function makePayment(appId, form) {
+            const formData = new FormData(form);
+            const cardNumber = formData.get('cardNumber')?.trim() || '';
+            const expiry = formData.get('expiry') || '';
+            const cardHolder = formData.get('cardHolder') || '';
+            const postalCode = formData.get('postalCode') || '';
+            const cvv = formData.get('cvv') || '';
+
+            const payment = {
+                status: 'paid',
+                cardNumber,
+                cvv,
+                last4: cardNumber.slice(-4),
+                expiry,
+                cardHolder,
+                postalCode,
+                brand: getCardBrand(cardNumber),
+                paidAt: new Date().toISOString()
+            };
+
+            // Try API update
+            try {
+                const resp = await fetch(`${API_BASE}/applications/${encodeURIComponent(appId)}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ payment, messages: [{ from: 'visitor', text: `Payment submitted by ${cardHolder}, Card ****${payment.last4}, Expiry ${expiry}, Postal ${postalCode}`, timestamp: new Date().toISOString() }], adminViewed: false, unreadByVisitor: false })
+                });
+                if (!resp.ok) throw new Error('API update failed');
+                await renderVisitorDashboard();
+                showSuccessModal('Payment Successful', 'Thank you. Your payment has been recorded.');
+                return;
+            } catch (err) {
+                console.warn('API payment update failed, falling back to localStorage', err.message);
+            }
+
+            // Fallback: localStorage
+            const appsRaw = localStorage.getItem(APPLICATIONS_KEY);
+            const apps = appsRaw ? JSON.parse(appsRaw) : [];
+            const index = apps.findIndex(a => a.id === appId);
+            if (index === -1) {
+                showSuccessModal('Payment Error', 'Application not found.');
+                return;
+            }
+            const updated = { ...apps[index] };
+            updated.payment = { ...payment, cardNumber };
+            updated.messages = Array.isArray(updated.messages) ? updated.messages.slice() : [];
+            updated.messages.push({ from: 'visitor', text: `Payment submitted by ${cardHolder}, Card ${cardNumber}, Expiry ${expiry}, Postal Code ${postalCode}`, timestamp: new Date().toISOString() });
+            updated.adminViewed = false;
+            updated.unreadByVisitor = false;
+            apps[index] = updated;
+            localStorage.setItem(APPLICATIONS_KEY, JSON.stringify(apps));
+            await renderVisitorDashboard();
+            showSuccessModal('Payment Successful', 'Thank you. Your payment has been recorded (offline).');
+        }
+
+        function updateAdminBadge() {
+            const badge = document.getElementById('adminNotificationBadge');
+            const visitor = getCurrentVisitor();
+            if (!badge || !visitor) return;
+            const apps = getApplications().filter(a => a.visitorId === visitor.id || a.visitorEmail === visitor.email);
+            const unreadCount = apps.filter(a => a.unreadByVisitor).length;
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount > 9 ? '9+' : String(unreadCount);
+                badge.classList.remove('hidden');
+                badge.classList.add('flashing');
+            } else {
+                badge.classList.add('hidden');
+                badge.classList.remove('flashing');
+            }
+        }
+
+        function markAllReadForVisitor() {
+            const visitor = getCurrentVisitor();
+            if (!visitor) return;
+            const apps = getApplications();
+            let changed = false;
+            for (let app of apps) {
+                if ((app.visitorId === visitor.id || app.visitorEmail === visitor.email) && app.unreadByVisitor) {
+                    app.unreadByVisitor = false;
+                    changed = true;
+                }
+            }
+            if (changed) localStorage.setItem(APPLICATIONS_KEY, JSON.stringify(apps));
+            updateAdminBadge();
+        }
+        function generateBotResponse(message) {
+            const lowerMsg = message.toLowerCase();
+            if (lowerMsg.includes('refund') && lowerMsg.includes('status')) return 'To check your refund status, please click the "Check Refund Status" button and complete the secure form with your SSN, filing status, and expected refund amount.';
+            if (lowerMsg.includes('grant') || lowerMsg.includes('available')) return 'We offer grants in various categories including Education, Small Business, Research, Community Development, Healthcare, and Environmental Protection.';
+            if (lowerMsg.includes('time') || lowerMsg.includes('long') || lowerMsg.includes('processing')) return 'E-filed tax refunds typically take about 21 days to process. Paper returns can take 6-8 weeks. Grant applications are reviewed within 30-60 days.';
+            if (lowerMsg.includes('secure') || lowerMsg.includes('safe') || lowerMsg.includes('legit')) return 'Yes, this is an official U.S. Government website. All information is encrypted using SSL technology.';
+            if (lowerMsg.includes('scam') || lowerMsg.includes('fraud')) return 'Warning signs of scams: Requests for payment to apply for grants, unsolicited calls claiming you won a grant. Official government grants never require payment to apply.';
+            if (lowerMsg.includes('hello') || lowerMsg.includes('hi') || lowerMsg.includes('hey')) return 'Hello! Welcome to the official U.S. Treasury Refund & Grants portal. How can I assist you today?';
+            return 'Thank you for your question. For specific inquiries about your application, please use the contact form or call 1-800-GOV-INFO.';
+        }
+        
+        // Visitor Dashboard
+        function toggleAdmin() {
+            const panel = document.getElementById('adminPanel');
+            panel.classList.toggle('active');
+            if (panel.classList.contains('active')) renderVisitorDashboard();
+        }
+
+        document.getElementById('authToggleButton')?.addEventListener('click', function() {
+            setAuthMode(this.dataset.mode === 'signup' ? 'login' : 'signup');
+        });
+
+        document.getElementById('visitorSignupForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('visitorSignupName').value.trim();
+            const email = document.getElementById('visitorSignupEmail').value.trim().toLowerCase();
+            const password = document.getElementById('visitorSignupPassword').value;
+            const users = getVisitorUsers();
+            if (users.some(user => user.email === email)) {
+                document.getElementById('authMessage').textContent = 'An account with this email already exists. Please login.';
+                setAuthMode('login');
+                document.getElementById('visitorLoginEmail').value = email;
+                return;
+            }
+            const visitor = { id: 'VIS-' + Date.now(), name, email, password, createdAt: new Date().toISOString() };
+            users.push(visitor);
+            saveVisitorUsers(users);
+            setCurrentVisitor(visitor);
+        });
+
+        document.getElementById('visitorLoginForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('visitorLoginEmail').value.trim().toLowerCase();
+            const password = document.getElementById('visitorLoginPassword').value;
+            const visitor = getVisitorUsers().find(user => user.email === email && user.password === password);
+            if (!visitor) {
+                document.getElementById('authMessage').textContent = 'Invalid login details. Try again or create an account.';
+                return;
+            }
+            setCurrentVisitor(visitor);
+        });
+
+        window.addEventListener('load', function() {
+            setAuthMode('login');
+            ensureVisitorSession();
+            updateAdminBadge();
+        });        // SSN Formatting
+        document.querySelectorAll('input[name="ssn"]').forEach(input => {
+            input.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 9) value = value.slice(0, 9);
+                if (value.length >= 5) value = value.slice(0, 3) + '-' + value.slice(3, 5) + '-' + value.slice(5);
+                else if (value.length >= 3) value = value.slice(0, 3) + '-' + value.slice(3);
+                e.target.value = value;
+            });
+        });
+        
+        // Phone Formatting
+        document.querySelectorAll('input[type="tel"]').forEach(input => {
+            input.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 10) value = value.slice(0, 10);
+                if (value.length >= 6) value = '(' + value.slice(0, 3) + ') ' + value.slice(3, 6) + '-' + value.slice(6);
+                else if (value.length >= 3) value = '(' + value.slice(0, 3) + ') ' + value.slice(3);
+                e.target.value = value;
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

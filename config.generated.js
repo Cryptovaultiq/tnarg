@@ -1,0 +1,2 @@
+window.WEB3FORMS_ACCESS_KEY = "";
+window.VISITOR_CONFIG = {"API_BASE_URL":""};
