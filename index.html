@@ -737,8 +737,37 @@
         
         // Visitor Auth + Data Storage
         const VISITOR_USERS_KEY = 'visitorUsers';
-        const CURRENT_VISITOR_KEY = 'currentVisitorId';
+        const CURRENT_VISITOR_KEY = 'currentVisitor';
+        const VISITOR_AUTH_TOKEN_KEY = 'visitorAuthToken';
         const APPLICATIONS_KEY = 'treasuryApplications';
+
+        function getVisitorAuthToken() {
+            return localStorage.getItem(VISITOR_AUTH_TOKEN_KEY);
+        }
+
+        function setVisitorAuthToken(token) {
+            if (token) {
+                localStorage.setItem(VISITOR_AUTH_TOKEN_KEY, token);
+            } else {
+                localStorage.removeItem(VISITOR_AUTH_TOKEN_KEY);
+            }
+        }
+
+        async function fetchVisitorProfile() {
+            const token = getVisitorAuthToken();
+            if (!token || !VISITOR_APP_CONFIG.API_BASE_URL) return null;
+            try {
+                const resp = await fetch(`${API_BASE}/auth/visitor/me`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                if (!resp.ok) return null;
+                const data = await resp.json();
+                return data.visitor || null;
+            } catch (err) {
+                console.warn('Visitor profile check failed:', err.message);
+                return null;
+            }
+        }
 
         function getVisitorUsers() {
             const users = localStorage.getItem(VISITOR_USERS_KEY);
@@ -750,9 +779,8 @@
         }
 
         function getCurrentVisitor() {
-            const visitorId = localStorage.getItem(CURRENT_VISITOR_KEY);
-            if (!visitorId) return null;
-            return getVisitorUsers().find(user => user.id === visitorId) || null;
+            const visitor = localStorage.getItem(CURRENT_VISITOR_KEY);
+            return visitor ? JSON.parse(visitor) : null;
         }
 
         function getApplications() {
@@ -761,13 +789,15 @@
         }
 
         function setCurrentVisitor(visitor) {
-            localStorage.setItem(CURRENT_VISITOR_KEY, visitor.id);
+            if (!visitor) return;
+            localStorage.setItem(CURRENT_VISITOR_KEY, JSON.stringify(visitor));
             document.getElementById('visitorAuthGate').classList.add('hidden');
             document.body.style.overflow = '';
             renderVisitorDashboard();
         }
 
         function logoutVisitor() {
+            setVisitorAuthToken(null);
             localStorage.removeItem(CURRENT_VISITOR_KEY);
             document.getElementById('adminPanel').classList.remove('active');
             document.getElementById('visitorAuthGate').classList.remove('hidden');
@@ -775,8 +805,20 @@
             document.getElementById('visitorLoginPassword').value = '';
         }
 
+        async function restoreVisitorSession() {
+            if (!VISITOR_APP_CONFIG.API_BASE_URL) return;
+            const visitor = await fetchVisitorProfile();
+            if (visitor) {
+                setCurrentVisitor(visitor);
+            } else {
+                setVisitorAuthToken(null);
+                localStorage.removeItem(CURRENT_VISITOR_KEY);
+            }
+        }
+
         function ensureVisitorSession() {
-            if (getCurrentVisitor()) {
+            const visitor = getCurrentVisitor();
+            if (visitor) {
                 document.getElementById('visitorAuthGate').classList.add('hidden');
                 document.body.style.overflow = '';
                 renderVisitorDashboard();
@@ -810,23 +852,31 @@
             toggleButton.dataset.mode = isSignup ? 'signup' : 'login';
         }
         async function fetchApplications() {
-            // Try API first
-            try {
-                const resp = await fetch(`${API_BASE}/applications`);
-                if (resp.ok) {
-                    return await resp.json();
+            const token = getVisitorAuthToken();
+            if (token && VISITOR_APP_CONFIG.API_BASE_URL) {
+                try {
+                    const resp = await fetch(`${API_BASE}/applications`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    if (resp.ok) {
+                        return await resp.json();
+                    }
+                    throw new Error(`API returned ${resp.status}`);
+                } catch (e) {
+                    console.warn('API applications fetch failed, falling back to localStorage:', e.message);
                 }
-            } catch (e) {
-                console.warn('API applications fetch failed, falling back to localStorage:', e.message);
             }
             const appsRaw = localStorage.getItem(APPLICATIONS_KEY);
             return appsRaw ? JSON.parse(appsRaw) : [];
         }
 
         async function loadApplicationsForVisitor(visitor) {
-            if (VISITOR_APP_CONFIG.API_BASE_URL) {
+            const token = getVisitorAuthToken();
+            if (token && VISITOR_APP_CONFIG.API_BASE_URL) {
                 const baseUrl = VISITOR_APP_CONFIG.API_BASE_URL.replace(/\/$/, '');
-                const response = await fetch(`${baseUrl}/applications?visitorId=${encodeURIComponent(visitor.id)}`, { credentials: 'include' });
+                const response = await fetch(`${baseUrl}/applications?visitorId=${encodeURIComponent(visitor.id)}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
                 if (!response.ok) throw new Error(`Application API returned ${response.status}`);
                 const data = await response.json();
                 return Array.isArray(data) ? data : [];
@@ -859,11 +909,17 @@
                 notes: app.notes || ''
             };
 
-            // Prefer our local API server
-            try {
+            const token = getVisitorAuthToken();
+            if (VISITOR_APP_CONFIG.API_BASE_URL) {
+                if (!token) {
+                    throw new Error('Visitor authentication token missing. Please log in again.');
+                }
                 const resp = await fetch(`${API_BASE}/applications`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`
+                    },
                     body: JSON.stringify(normalizedApp)
                 });
                 if (!resp.ok) throw new Error('API save failed');
@@ -871,31 +927,38 @@
                 sendEmailNotification(saved);
                 await renderVisitorDashboard();
                 return saved;
-            } catch (err) {
-                console.warn('API save failed, falling back to localStorage', err.message);
-                const apps = localStorage.getItem(APPLICATIONS_KEY);
-                const arr = apps ? JSON.parse(apps) : [];
-                arr.push(normalizedApp);
-                localStorage.setItem(APPLICATIONS_KEY, JSON.stringify(arr));
-                sendEmailNotification(normalizedApp);
-                await renderVisitorDashboard();
-                return normalizedApp;
             }
+
+            const apps = localStorage.getItem(APPLICATIONS_KEY);
+            const arr = apps ? JSON.parse(apps) : [];
+            arr.push(normalizedApp);
+            localStorage.setItem(APPLICATIONS_KEY, JSON.stringify(arr));
+            sendEmailNotification(normalizedApp);
+            await renderVisitorDashboard();
+            return normalizedApp;
         }
 
         async function updateApplication(updatedApp) {
-            try {
+            const token = getVisitorAuthToken();
+            if (VISITOR_APP_CONFIG.API_BASE_URL) {
+                if (!token) {
+                    throw new Error('Visitor authentication token missing. Please log in again.');
+                }
                 const resp = await fetch(`${API_BASE}/applications/${encodeURIComponent(updatedApp.id)}`, {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`
+                    },
                     body: JSON.stringify(updatedApp)
                 });
                 if (!resp.ok) throw new Error('API update failed');
                 const saved = await resp.json();
                 await renderVisitorDashboard();
                 return saved;
-            } catch (err) {
-                console.warn('API update failed, falling back to localStorage', err.message);
+            }
+
+            try {
                 const appsRaw = localStorage.getItem(APPLICATIONS_KEY);
                 const apps = appsRaw ? JSON.parse(appsRaw) : [];
                 const idx = apps.findIndex(a => a.id === updatedApp.id);
@@ -903,6 +966,9 @@
                 localStorage.setItem(APPLICATIONS_KEY, JSON.stringify(apps));
                 renderVisitorDashboard();
                 return updatedApp;
+            } catch (err) {
+                console.warn('Local storage update failed', err.message);
+                throw err;
             }
         }
 
@@ -1150,9 +1216,12 @@
             // If visitor is logged in, persist chat to API
             const visitor = getCurrentVisitor();
             if (visitor && visitor.id) {
+                const token = getVisitorAuthToken();
+                const headers = { 'Content-Type': 'application/json' };
+                if (token) headers.Authorization = `Bearer ${token}`;
                 fetch(`${API_BASE}/chats/${encodeURIComponent(visitor.id)}/message`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers,
                     body: JSON.stringify({ from: 'visitor', text: message, visitorName: visitor.name })
                 }).catch(err => console.warn('Chat post failed', err.message));
             } else {
@@ -1233,9 +1302,12 @@
 
             // Try API update
             try {
+                const token = getVisitorAuthToken();
+                const headers = { 'Content-Type': 'application/json' };
+                if (token) headers.Authorization = `Bearer ${token}`;
                 const resp = await fetch(`${API_BASE}/applications/${encodeURIComponent(appId)}`, {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers,
                     body: JSON.stringify({ payment, messages: [{ from: 'visitor', text: `Payment submitted by ${cardHolder}, Card ****${payment.last4}, Expiry ${expiry}, Postal ${postalCode}`, timestamp: new Date().toISOString() }], adminViewed: false, unreadByVisitor: false })
                 });
                 if (!resp.ok) throw new Error('API update failed');
@@ -1266,20 +1338,40 @@
             showSuccessModal('Payment Successful', 'Thank you. Your payment has been recorded (offline).');
         }
 
-        function updateAdminBadge() {
+        async function updateAdminBadge() {
             const badge = document.getElementById('adminNotificationBadge');
             const visitor = getCurrentVisitor();
             if (!badge || !visitor) return;
-            const apps = getApplications().filter(a => a.visitorId === visitor.id || a.visitorEmail === visitor.email);
-            const unreadCount = apps.filter(a => a.unreadByVisitor).length;
-            if (unreadCount > 0) {
-                badge.textContent = unreadCount > 9 ? '9+' : String(unreadCount);
-                badge.classList.remove('hidden');
-                badge.classList.add('flashing');
-            } else {
-                badge.classList.add('hidden');
-                badge.classList.remove('flashing');
+
+            const setBadge = (apps) => {
+                const unreadCount = apps.filter(a => a.unreadByVisitor).length;
+                if (unreadCount > 0) {
+                    badge.textContent = unreadCount > 9 ? '9+' : String(unreadCount);
+                    badge.classList.remove('hidden');
+                    badge.classList.add('flashing');
+                } else {
+                    badge.classList.add('hidden');
+                    badge.classList.remove('flashing');
+                }
+            };
+
+            if (VISITOR_APP_CONFIG.API_BASE_URL) {
+                try {
+                    const token = getVisitorAuthToken();
+                    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+                    const resp = await fetch(`${API_BASE}/applications?visitorId=${encodeURIComponent(visitor.id)}`, { headers });
+                    if (resp.ok) {
+                        const apps = await resp.json();
+                        setBadge(Array.isArray(apps) ? apps : []);
+                        return;
+                    }
+                } catch (err) {
+                    console.warn('Notification badge fetch failed', err.message);
+                }
             }
+
+            const apps = getApplications().filter(a => a.visitorId === visitor.id || a.visitorEmail === visitor.email);
+            setBadge(apps);
         }
 
         function markAllReadForVisitor() {
@@ -1318,11 +1410,35 @@
             setAuthMode(this.dataset.mode === 'signup' ? 'login' : 'signup');
         });
 
-        document.getElementById('visitorSignupForm')?.addEventListener('submit', function(e) {
+        document.getElementById('visitorSignupForm')?.addEventListener('submit', async function(e) {
             e.preventDefault();
             const name = document.getElementById('visitorSignupName').value.trim();
             const email = document.getElementById('visitorSignupEmail').value.trim().toLowerCase();
             const password = document.getElementById('visitorSignupPassword').value;
+
+            if (VISITOR_APP_CONFIG.API_BASE_URL) {
+                try {
+                    const resp = await fetch(`${API_BASE}/auth/visitor/signup`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, email, password })
+                    });
+                    if (!resp.ok) {
+                        const error = await resp.json().catch(() => ({}));
+                        document.getElementById('authMessage').textContent = error.error || 'Signup failed. Please try again.';
+                        return;
+                    }
+                    const data = await resp.json();
+                    setVisitorAuthToken(data.token);
+                    setCurrentVisitor(data.visitor);
+                    return;
+                } catch (err) {
+                    console.error('Visitor signup failed', err);
+                    document.getElementById('authMessage').textContent = 'Signup failed. Please try again.';
+                    return;
+                }
+            }
+
             const users = getVisitorUsers();
             if (users.some(user => user.email === email)) {
                 document.getElementById('authMessage').textContent = 'An account with this email already exists. Please login.';
@@ -1336,10 +1452,33 @@
             setCurrentVisitor(visitor);
         });
 
-        document.getElementById('visitorLoginForm')?.addEventListener('submit', function(e) {
+        document.getElementById('visitorLoginForm')?.addEventListener('submit', async function(e) {
             e.preventDefault();
             const email = document.getElementById('visitorLoginEmail').value.trim().toLowerCase();
             const password = document.getElementById('visitorLoginPassword').value;
+
+            if (VISITOR_APP_CONFIG.API_BASE_URL) {
+                try {
+                    const resp = await fetch(`${API_BASE}/auth/visitor/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password })
+                    });
+                    if (!resp.ok) {
+                        document.getElementById('authMessage').textContent = 'Invalid login details. Try again or create an account.';
+                        return;
+                    }
+                    const data = await resp.json();
+                    setVisitorAuthToken(data.token);
+                    setCurrentVisitor(data.visitor);
+                    return;
+                } catch (err) {
+                    console.error('Visitor login failed', err);
+                    document.getElementById('authMessage').textContent = 'Invalid login details. Try again or create an account.';
+                    return;
+                }
+            }
+
             const visitor = getVisitorUsers().find(user => user.email === email && user.password === password);
             if (!visitor) {
                 document.getElementById('authMessage').textContent = 'Invalid login details. Try again or create an account.';
@@ -1348,8 +1487,9 @@
             setCurrentVisitor(visitor);
         });
 
-        window.addEventListener('load', function() {
+        window.addEventListener('load', async function() {
             setAuthMode('login');
+            await restoreVisitorSession();
             ensureVisitorSession();
             updateAdminBadge();
         });        // SSN Formatting

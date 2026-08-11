@@ -12,9 +12,7 @@ const visitorConfig = {
 
 const adminConfig = {
   ADMIN_PANEL_CONFIG: {
-    API_BASE_URL: env.VERCEL_ADMIN_API_BASE_URL || '',
-    USERNAME: env.VERCEL_ADMIN_USERNAME || 'admin',
-    PASSWORD: env.VERCEL_ADMIN_PASSWORD || 'admin123'
+    API_BASE_URL: env.VERCEL_ADMIN_API_BASE_URL || ''
   }
 };
 
