@@ -19,6 +19,11 @@ const adminConfig = {
 fs.writeFileSync(path.resolve(__dirname, 'config.generated.js'), `window.WEB3FORMS_ACCESS_KEY = ${JSON.stringify(visitorConfig.WEB3FORMS_ACCESS_KEY)};
 window.VISITOR_CONFIG = ${JSON.stringify(visitorConfig.VISITOR_CONFIG)};
 `);
-fs.writeFileSync(path.resolve(__dirname, 'admin-panel', 'config.generated.js'), `window.ADMIN_PANEL_CONFIG = ${JSON.stringify(adminConfig.ADMIN_PANEL_CONFIG)};
+const adminConfigDir = path.resolve(__dirname, 'admin-panel');
+if (fs.existsSync(adminConfigDir)) {
+  fs.writeFileSync(path.resolve(adminConfigDir, 'config.generated.js'), `window.ADMIN_PANEL_CONFIG = ${JSON.stringify(adminConfig.ADMIN_PANEL_CONFIG)};
 `);
-console.log('Generated visitor and admin config from env variables.');
+  console.log('Generated visitor and admin config from env variables.');
+} else {
+  console.log('Generated visitor config from env variables. admin-panel directory not found, skipping admin config generation.');
+}
