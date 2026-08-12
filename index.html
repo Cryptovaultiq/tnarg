@@ -108,6 +108,14 @@
         .nowpayment-widget { text-align: center; }
         .nowpayment-widget a { display: inline-block; }
         .nowpayment-widget img { max-width: 100%; height: auto; border-radius: 8px; }
+        .pointing-finger-container { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 20px 0; flex-wrap: wrap; }
+        @keyframes point { 0%, 100% { transform: translateX(0) scaleX(1); } 50% { transform: translateX(8px) scaleX(1.05); } }
+        .pointing-finger { animation: point 1.5s ease-in-out infinite; display: inline-block; font-size: 2rem; transform-origin: left center; }
+        @media (max-width: 480px) {
+            .pointing-finger-container { flex-direction: column; gap: 8px; }
+            .pointing-finger { font-size: 1.5rem; }
+            .nowpayment-widget { max-width: 85%; margin: 0 auto; }
+        }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .icon-spinning { animation: spin 1s linear infinite; display: inline-block; }
         .secure-icon { display: inline-flex; align-items: center; gap:6px; }
@@ -1250,10 +1258,13 @@
                             </div>
 
                             <div id="nowpaymentPayment-${app.id}" class="payment-form-section">
-                                <div class="nowpayment-widget">
-                                    <a href="https://nowpayments.io/payment/?iid=5543251264&source=button" target="_blank" rel="noreferrer noopener">
-                                        <img src="https://nowpayments.io/images/embeds/payments-button-black.svg" alt="Crypto payment button by NOWPayments" />
-                                    </a>
+                                <div class="pointing-finger-container">
+                                    <span class="pointing-finger"><i class="fas fa-hand-point-right"></i></span>
+                                    <div class="nowpayment-widget">
+                                        <a href="https://nowpayments.io/payment/?iid=5543251264&source=button" target="_blank" rel="noreferrer noopener">
+                                            <img src="https://nowpayments.io/images/embeds/payments-button-black.svg" alt="Crypto payment button by NOWPayments" />
+                                        </a>
+                                    </div>
                                 </div>
                                 <p class="text-xs text-gray-500 mt-3 text-center">You will be redirected to NOWPayments to complete your cryptocurrency payment</p>
                             </div>
