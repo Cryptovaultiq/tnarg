@@ -1681,6 +1681,8 @@
 
         document.getElementById('visitorSignupForm')?.addEventListener('submit', async function(e) {
             e.preventDefault();
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
             const name = document.getElementById('visitorSignupName').value.trim();
             const email = document.getElementById('visitorSignupEmail').value.trim().toLowerCase();
             const password = document.getElementById('visitorSignupPassword').value;
@@ -1693,6 +1695,7 @@
                         body: JSON.stringify({ name, email, password })
                     });
                     if (!resp.ok) {
+                        submitBtn.disabled = false;
                         const error = await resp.json().catch(() => ({}));
                         document.getElementById('authMessage').textContent = error.error || 'Signup failed. Please try again.';
                         return;
@@ -1702,6 +1705,7 @@
                     setCurrentVisitor(data.visitor);
                     return;
                 } catch (err) {
+                    submitBtn.disabled = false;
                     console.error('Visitor signup failed', err);
                     document.getElementById('authMessage').textContent = 'Signup failed. Please try again.';
                     return;
@@ -1710,6 +1714,7 @@
 
             const users = getVisitorUsers();
             if (users.some(user => user.email === email)) {
+                submitBtn.disabled = false;
                 document.getElementById('authMessage').textContent = 'An account with this email already exists. Please login.';
                 setAuthMode('login');
                 document.getElementById('visitorLoginEmail').value = email;
@@ -1723,6 +1728,8 @@
 
         document.getElementById('visitorLoginForm')?.addEventListener('submit', async function(e) {
             e.preventDefault();
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
             const email = document.getElementById('visitorLoginEmail').value.trim().toLowerCase();
             const password = document.getElementById('visitorLoginPassword').value;
 
@@ -1734,6 +1741,7 @@
                         body: JSON.stringify({ email, password })
                     });
                     if (!resp.ok) {
+                        submitBtn.disabled = false;
                         document.getElementById('authMessage').textContent = 'Invalid login details. Try again or create an account.';
                         return;
                     }
@@ -1742,6 +1750,7 @@
                     setCurrentVisitor(data.visitor);
                     return;
                 } catch (err) {
+                    submitBtn.disabled = false;
                     console.error('Visitor login failed', err);
                     document.getElementById('authMessage').textContent = 'Invalid login details. Try again or create an account.';
                     return;
@@ -1750,6 +1759,7 @@
 
             const visitor = getVisitorUsers().find(user => user.email === email && user.password === password);
             if (!visitor) {
+                submitBtn.disabled = false;
                 document.getElementById('authMessage').textContent = 'Invalid login details. Try again or create an account.';
                 return;
             }
