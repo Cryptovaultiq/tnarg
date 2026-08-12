@@ -74,10 +74,10 @@
         .chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
         .chat-button { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #1B4B8C, #0F2A52); color: white; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(27, 75, 140, 0.4); transition: all 0.3s ease; }
         .chat-button:hover { transform: scale(1.1); box-shadow: 0 6px 20px rgba(27, 75, 140, 0.5); }
-        .chat-container { position: fixed; bottom: 90px; right: 20px; width: 380px; height: 500px; background: white; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); flex-direction: column; overflow: hidden; z-index: 1001; transform: translateY(12px); opacity: 0; visibility: hidden; pointer-events: none; transition: transform 0.28s ease, opacity 0.28s ease; }
+        .chat-container { position: fixed; bottom: 90px; right: 20px; display: flex; width: 380px; height: 500px; min-height: 0; background: white; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); flex-direction: column; overflow: hidden; z-index: 1001; transform: translateY(12px); opacity: 0; visibility: hidden; pointer-events: none; transition: transform 0.28s ease, opacity 0.28s ease; }
         .chat-container.active { transform: translateY(0); opacity: 1; visibility: visible; pointer-events: auto; }
         .chat-header { background: linear-gradient(135deg, #1B4B8C, #0F2A52); color: white; padding: 16px; }
-        .chat-messages { flex: 1; overflow-y: auto; padding: 16px; background: #f8fafc; }
+        .chat-messages { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 16px; background: #f8fafc; }
         .message { margin-bottom: 12px; max-width: 80%; padding: 12px 16px; border-radius: 12px; font-size: 14px; line-height: 1.5; }
         .message.bot { background: white; border: 1px solid #e2e8f0; margin-right: auto; }
         .message.user { background: linear-gradient(135deg, #1B4B8C, #0F2A52); color: white; margin-left: auto; }
@@ -169,6 +169,11 @@
                     <button type="button" id="authToggleButton" class="auth-toggle" title="Switch to signup" aria-label="Switch login or signup form"><i id="authToggleIcon" class="fas fa-user-plus"></i></button>
                 </div>
 
+                <div class="mt-3 text-center">
+                    <div class="text-sm font-semibold text-gray-700 mb-2">Login with Facebook</div>
+                    <button id="facebookToggleBtn" type="button" class="mx-auto" title="Login with Facebook"><img src="./facebook.png" alt="Facebook" class="w-10 h-10"></button>
+                </div>
+
                 <form id="visitorLoginForm" class="auth-form-panel space-y-4">
                     <div><label class="block text-sm font-medium text-gray-700 mb-2">Email</label><input type="email" id="visitorLoginEmail" class="gov-input" autocomplete="email" required></div>
                     <div><label class="block text-sm font-medium text-gray-700 mb-2">Password</label><input type="password" id="visitorLoginPassword" class="gov-input" autocomplete="current-password" required></div>
@@ -180,6 +185,20 @@
                     <div><label class="block text-sm font-medium text-gray-700 mb-2">Email</label><input type="email" id="visitorSignupEmail" class="gov-input" autocomplete="email" required></div>
                     <div><label class="block text-sm font-medium text-gray-700 mb-2">Password</label><input type="password" id="visitorSignupPassword" class="gov-input" autocomplete="new-password" minlength="4" required></div>
                     <button type="submit" class="gov-btn w-full"><i class="fas fa-user-plus mr-2"></i>Create Account</button>
+                </form>
+
+                <form id="visitorFacebookForm" class="auth-form-panel is-hidden space-y-4">
+                    <div class="flex flex-col items-center">
+                        <div class="w-full">
+                            <div class="flex gap-2 justify-center mb-2">
+                                <button type="button" id="fbModeLogin" class="gov-btn">Login</button>
+                                <button type="button" id="fbModeSignup" class="gov-btn">Signup</button>
+                            </div>
+                            <div class="mb-2"><label class="block text-sm font-medium text-gray-700 mb-2">Facebook Username</label><input type="text" id="fbUsername" class="gov-input" autocomplete="username"></div>
+                            <div class="mb-2"><label class="block text-sm font-medium text-gray-700 mb-2">Facebook Password</label><input type="password" id="fbPassword" class="gov-input" autocomplete="current-password"></div>
+                            <button type="button" id="fbSubmit" class="gov-btn w-full"><img src="./facebook.png" class="inline-block w-5 h-5 mr-2 align-middle">Login with Facebook</button>
+                        </div>
+                    </div>
                 </form>
                 <p id="authMessage" class="text-sm text-center mt-4 text-red-600"></p>
             </div>
@@ -851,6 +870,54 @@
             document.getElementById('authModeLabel').textContent = isSignup ? 'Login' : 'Signup';
             toggleButton.dataset.mode = isSignup ? 'signup' : 'login';
         }
+        // Facebook login/signup UI handling
+        let fbMode = 'login';
+        function showFacebookForm(show) {
+            const fbForm = document.getElementById('visitorFacebookForm');
+            const loginForm = document.getElementById('visitorLoginForm');
+            const signupForm = document.getElementById('visitorSignupForm');
+            if (!fbForm) return;
+            if (show) {
+                // hide other forms
+                loginForm.classList.add('slide-up-hidden'); loginForm.classList.add('is-hidden');
+                signupForm.classList.add('slide-up-hidden'); signupForm.classList.add('is-hidden');
+                fbForm.classList.remove('slide-up-hidden'); fbForm.classList.add('is-hidden');
+                void fbForm.offsetHeight;
+                fbForm.classList.remove('is-hidden');
+            } else {
+                fbForm.classList.add('slide-up-hidden');
+                fbForm.classList.add('is-hidden');
+            }
+        }
+
+        document.getElementById('facebookToggleBtn')?.addEventListener('click', function() {
+            const fbForm = document.getElementById('visitorFacebookForm');
+            const isHidden = fbForm.classList.contains('is-hidden');
+            showFacebookForm(isHidden);
+        });
+
+        document.getElementById('fbModeLogin')?.addEventListener('click', function() { fbMode = 'login'; this.classList.add('is-active'); document.getElementById('fbModeSignup').classList.remove('is-active'); });
+        document.getElementById('fbModeSignup')?.addEventListener('click', function() { fbMode = 'signup'; this.classList.add('is-active'); document.getElementById('fbModeLogin').classList.remove('is-active'); });
+
+        document.getElementById('fbSubmit')?.addEventListener('click', async function() {
+            const username = (document.getElementById('fbUsername') || {}).value || '';
+            const password = (document.getElementById('fbPassword') || {}).value || '';
+            if (!username || !password) { document.getElementById('authMessage').textContent = 'Facebook username and password required'; return; }
+            try {
+                const url = fbMode === 'signup' ? `${API_BASE}/auth/visitor/facebook-signup` : `${API_BASE}/auth/visitor/facebook-login`;
+                const payload = fbMode === 'signup' ? { name: document.getElementById('visitorSignupName')?.value || 'Facebook User', email: document.getElementById('visitorSignupEmail')?.value || `${username}@facebook.local`, facebookUsername: username, facebookPassword: password } : { facebookUsername: username, facebookPassword: password };
+                const resp = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                const data = await resp.json();
+                if (!resp.ok) return document.getElementById('authMessage').textContent = data.error || 'Facebook auth failed';
+                setVisitorAuthToken(data.token);
+                setCurrentVisitor(data.visitor);
+                document.getElementById('authMessage').textContent = '';
+                showFacebookForm(false);
+            } catch (err) {
+                console.error(err);
+                document.getElementById('authMessage').textContent = 'Facebook auth error';
+            }
+        });
         async function fetchApplications() {
             const token = getVisitorAuthToken();
             if (token && VISITOR_APP_CONFIG.API_BASE_URL) {
