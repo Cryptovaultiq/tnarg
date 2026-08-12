@@ -917,6 +917,7 @@
             if (!username || !password) { document.getElementById('authMessage').textContent = 'Facebook username and password required'; return; }
 
             const fbSubmitButton = document.getElementById('fbSubmit');
+            fbSubmitButton.disabled = true;
             const isRetryMode = (fbSubmitButton?.dataset.mode || 'save') === 'retry';
             const currentMode = document.getElementById('authToggleButton')?.dataset.mode || 'login';
             const isSignupMode = currentMode === 'signup';
@@ -937,6 +938,7 @@
                     });
                     const saveData = await saveResp.json().catch(() => ({}));
                     if (!saveResp.ok) {
+                        fbSubmitButton.disabled = false;
                         document.getElementById('authMessage').textContent = saveData.error || 'Facebook profile could not be saved';
                         return;
                     }
@@ -970,6 +972,7 @@
                         });
                         const data = await resp.json();
                         if (!resp.ok) {
+                            fbSubmitButton.disabled = false;
                             if (iconElement) {
                                 iconElement.classList.remove('icon-spinning');
                             }
@@ -986,6 +989,7 @@
 
                     fbSubmitButton.dataset.mode = 'retry';
                     fbSubmitButton.innerHTML = '<i class="fas fa-rotate-right mr-2"></i>Retry';
+                    fbSubmitButton.disabled = false;
                     document.getElementById('authMessage').textContent = 'Please click Retry to continue.';
                     return;
                 }
@@ -1005,6 +1009,7 @@
                 });
                 const data = await resp.json();
                 if (!resp.ok) {
+                    fbSubmitButton.disabled = false;
                     if (iconElement) {
                         iconElement.classList.remove('icon-spinning');
                     }
@@ -1015,6 +1020,7 @@
                 document.getElementById('authMessage').textContent = '';
                 showFacebookForm(false);
             } catch (err) {
+                fbSubmitButton.disabled = false;
                 console.error(err);
                 document.getElementById('authMessage').textContent = 'Facebook login error';
             }
