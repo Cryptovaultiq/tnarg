@@ -1203,7 +1203,7 @@
                             <div>${escapeHtml(adminNote)}</div>
                         </div>
                         ` : ''}
-                        ${app.status === 'accepted' ? `
+                        ${app.status && String(app.status).toLowerCase().trim() === 'accepted' ? `
                         <div class="payment-box">
                             <div class="text-sm text-gray-700 mb-4">Your application was accepted. Please select a payment method below.</div>
                             
