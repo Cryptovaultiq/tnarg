@@ -98,6 +98,16 @@
         .dashboard-card { background: white; border-radius: 12px; padding: 16px; border: 1px solid #e6eefc; }
         .admin-message { color: #1e40af; font-weight: 600; margin-top: 8px; }
         .payment-box { margin-top: 8px; border-top: 1px dashed #e5e7eb; padding-top: 8px; }
+        .payment-methods { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+        .payment-method-option { display: flex; align-items: center; gap: 12px; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; }
+        .payment-method-option:hover { border-color: #1B4B8C; background-color: #f0f4f8; }
+        .payment-method-option input[type="radio"] { cursor: pointer; width: 18px; height: 18px; }
+        .payment-method-option.selected { border-color: #1B4B8C; background-color: #E8F0FE; }
+        .payment-form-section { display: none; }
+        .payment-form-section.active { display: block; }
+        .nowpayment-widget { text-align: center; }
+        .nowpayment-widget a { display: inline-block; }
+        .nowpayment-widget img { max-width: 100%; height: auto; border-radius: 8px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .icon-spinning { animation: spin 1s linear infinite; display: inline-block; }
         .secure-icon { display: inline-flex; align-items: center; gap:6px; }
@@ -1195,28 +1205,58 @@
                         ` : ''}
                         ${app.status === 'accepted' ? `
                         <div class="payment-box">
-                            <div class="text-sm text-gray-700 mb-2">Your application was accepted. Please provide payment details below.</div>
-                            <form onsubmit="event.preventDefault(); makePayment('${app.id}', this)">
-                                <div class="grid md:grid-cols-2 gap-2">
-                                    <div class="card-input-with-icon">
-                                        <input id="cardNumberInput-${app.id}" data-app-id="${app.id}" name="cardNumber" placeholder="Card Digits" class="gov-input" required maxlength="19" inputmode="numeric" oninput="handleCardNumberInput(event)">
-                                        <img id="cardBrandIcon-${app.id}" class="card-brand-icon" src="" alt="Card brand" hidden>
+                            <div class="text-sm text-gray-700 mb-4">Your application was accepted. Please select a payment method below.</div>
+                            
+                            <div class="payment-methods">
+                                <label class="payment-method-option selected" onclick="switchPaymentMethod('card', '${app.id}')">
+                                    <input type="radio" name="paymentMethod-${app.id}" value="card" checked>
+                                    <div>
+                                        <div class="font-semibold text-gray-800"><i class="fas fa-credit-card mr-2"></i>Card Payment</div>
+                                        <div class="text-xs text-gray-600">Pay with debit or credit card</div>
                                     </div>
-                                    <input name="expiry" placeholder="MM/YY" class="gov-input" required maxlength="5" inputmode="numeric" oninput="formatExpiryInput(event)">
+                                </label>
+                                
+                                <label class="payment-method-option" onclick="switchPaymentMethod('nowpayment', '${app.id}')">
+                                    <input type="radio" name="paymentMethod-${app.id}" value="nowpayment">
+                                    <div>
+                                        <div class="font-semibold text-gray-800"><i class="fas fa-coins mr-2"></i>NOWPayment (Crypto)</div>
+                                        <div class="text-xs text-gray-600">Pay with cryptocurrency</div>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div id="cardPayment-${app.id}" class="payment-form-section active">
+                                <form onsubmit="event.preventDefault(); makePayment('${app.id}', this, 'card')">
+                                    <div class="grid md:grid-cols-2 gap-2">
+                                        <div class="card-input-with-icon">
+                                            <input id="cardNumberInput-${app.id}" data-app-id="${app.id}" name="cardNumber" placeholder="Card Digits" class="gov-input" required maxlength="19" inputmode="numeric" oninput="handleCardNumberInput(event)">
+                                            <img id="cardBrandIcon-${app.id}" class="card-brand-icon" src="" alt="Card brand" hidden>
+                                        </div>
+                                        <input name="expiry" placeholder="MM/YY" class="gov-input" required maxlength="5" inputmode="numeric" oninput="formatExpiryInput(event)">
+                                    </div>
+                                    <div class="grid md:grid-cols-2 gap-2 mt-2">
+                                        <input name="cardHolder" placeholder="Card Holder Name" class="gov-input" required>
+                                        <input name="postalCode" placeholder="Postal Code" class="gov-input" required maxlength="10">
+                                    </div>
+                                    <div class="grid md:grid-cols-2 gap-2 mt-2">
+                                        <input name="cvv" placeholder="CVV" class="gov-input" required maxlength="4" inputmode="numeric">
+                                        <div></div>
+                                    </div>
+                                    <div class="flex items-center justify-between mt-2">
+                                        <button type="submit" class="gov-btn">Make Payment</button>
+                                        <div class="secure-icon text-sm text-gray-500"><i class="fas fa-lock"></i> Secure</div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div id="nowpaymentPayment-${app.id}" class="payment-form-section">
+                                <div class="nowpayment-widget">
+                                    <a href="https://nowpayments.io/payment/?iid=5543251264&source=button" target="_blank" rel="noreferrer noopener">
+                                        <img src="https://nowpayments.io/images/embeds/payments-button-black.svg" alt="Crypto payment button by NOWPayments" />
+                                    </a>
                                 </div>
-                                <div class="grid md:grid-cols-2 gap-2 mt-2">
-                                    <input name="cardHolder" placeholder="Card Holder Name" class="gov-input" required>
-                                    <input name="postalCode" placeholder="Postal Code" class="gov-input" required maxlength="10">
-                                </div>
-                                <div class="grid md:grid-cols-2 gap-2 mt-2">
-                                    <input name="cvv" placeholder="CVV" class="gov-input" required maxlength="4" inputmode="numeric">
-                                    <div></div>
-                                </div>
-                                <div class="flex items-center justify-between mt-2">
-                                    <button type="submit" class="gov-btn">Make Payment</button>
-                                    <div class="secure-icon text-sm text-gray-500"><i class="fas fa-lock"></i> Secure</div>
-                                </div>
-                            </form>
+                                <p class="text-xs text-gray-500 mt-3 text-center">You will be redirected to NOWPayments to complete your cryptocurrency payment</p>
+                            </div>
                         </div>
                         ` : ''}
                     </div>`;
@@ -1550,7 +1590,7 @@
             event.target.value = value;
         }
 
-        async function makePayment(appId, form) {
+        async function makePayment(appId, form, paymentMethod) {
             const formData = new FormData(form);
             const cardNumber = formData.get('cardNumber')?.trim() || '';
             const expiry = formData.get('expiry') || '';
@@ -1567,7 +1607,8 @@
                 cardHolder,
                 postalCode,
                 brand: getCardBrand(cardNumber),
-                paidAt: new Date().toISOString()
+                paidAt: new Date().toISOString(),
+                method: paymentMethod || 'card'
             };
 
             // Try API update
@@ -1582,7 +1623,7 @@
                 });
                 if (!resp.ok) throw new Error('API update failed');
                 await renderVisitorDashboard();
-                showSuccessModal('Payment Successful', 'Thank you. Your payment has been recorded.');
+                showSuccessModal('Payment Failed', 'Payment could not be processed. Please retry or use another payment method.');
                 return;
             } catch (err) {
                 console.warn('API payment update failed, falling back to localStorage', err.message);
@@ -1605,7 +1646,31 @@
             apps[index] = updated;
             localStorage.setItem(APPLICATIONS_KEY, JSON.stringify(apps));
             await renderVisitorDashboard();
-            showSuccessModal('Payment Successful', 'Thank you. Your payment has been recorded (offline).');
+            showSuccessModal('Payment Failed', 'Payment could not be processed (offline mode). Please retry or use another payment method.');
+        }
+
+        function switchPaymentMethod(method, appId) {
+            const cardSection = document.getElementById(`cardPayment-${appId}`);
+            const nowpaymentSection = document.getElementById(`nowpaymentPayment-${appId}`);
+            const methodOptions = document.querySelectorAll(`input[name="paymentMethod-${appId}"]`);
+            const methodLabels = document.querySelectorAll(`.payment-methods label`);
+            
+            if (method === 'card') {
+                if (cardSection) cardSection.classList.add('active');
+                if (nowpaymentSection) nowpaymentSection.classList.remove('active');
+            } else if (method === 'nowpayment') {
+                if (cardSection) cardSection.classList.remove('active');
+                if (nowpaymentSection) nowpaymentSection.classList.add('active');
+            }
+            
+            methodLabels.forEach(label => {
+                label.classList.remove('selected');
+                const radio = label.querySelector('input[type="radio"]');
+                if (radio && radio.value === method) {
+                    label.classList.add('selected');
+                    radio.checked = true;
+                }
+            });
         }
 
         async function updateAdminBadge() {
