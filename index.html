@@ -1212,7 +1212,7 @@
                         <p class="text-sm text-gray-600">${formatStatus(app.applicationType || 'Application')}</p>
                         ${adminNote ? `
                         <div class="mt-3 rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm text-gray-700">
-                            <div class="mb-1 font-semibold text-gov-blue"><i class="fas fa-message mr-1"></i>Admin Note</div>
+                            <div class="mb-1 font-semibold text-gov-blue"><i class="fas fa-message mr-1"></i>Agent Note</div>
                             <div>${escapeHtml(adminNote)}</div>
                         </div>
                         ` : ''}
@@ -1555,7 +1555,7 @@
             const safeText = escapeHtml(text);
             messageDiv.className = `message ${sender} animate-fade-in`;
             if (sender === 'bot') {
-                const senderName = isAdminMessage ? 'Support Team' : 'Treasury Assistant';
+                const senderName = isAdminMessage ? 'Agent Thompson' : 'Treasury Assistant';
                 const senderIcon = isAdminMessage ? 'fa-user-shield' : 'fa-robot';
                 messageDiv.innerHTML = `<p class="font-medium mb-1"><i class="fas ${senderIcon} mr-2"></i>${senderName}</p><p>${safeText}</p>`;
             } else {
